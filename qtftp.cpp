@@ -6,6 +6,7 @@ QtFtp::QtFtp(QWidget *parent) :
     ui(new Ui::QtFtp)
 {
     ui->setupUi(this);
+
 }
 
 QtFtp::~QtFtp()
