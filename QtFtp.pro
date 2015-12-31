@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,8 +14,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        qtftp.cpp
+        qtftp.cpp \
+    ftpthread.cpp
 
-HEADERS  += qtftp.h
+HEADERS  += qtftp.h \
+    ftpthread.h \
+    config.h
 
 FORMS    += qtftp.ui
