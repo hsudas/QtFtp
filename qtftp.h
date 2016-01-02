@@ -2,9 +2,10 @@
 #define QTFTP_H
 
 #include <QMainWindow>
+#include <QCalendarWidget>
 
-#include <QDebug>
 #include "ftpthread.h"
+#include "takvim.h"
 
 namespace Ui {
 class QtFtp;
@@ -25,6 +26,8 @@ private:
 
 public slots:
     void dosyaListesiOlusturuldu(QStringList sl);
+    void btnTarihTiklandi(bool b);
+    void takvimKapandi(QDate date);
 
 };
 

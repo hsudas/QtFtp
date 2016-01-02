@@ -6,7 +6,33 @@ QtFtp::QtFtp(QWidget *parent) :
     ui(new Ui::QtFtp)
 {
     ui->setupUi(this);
+
+    ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
+    connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
+
     threadCalistir();
+}
+
+/*
+ * takvim widget i kapandigi zaman takvimKapandi(QDate) slotu
+ * calisiyor. secilen tarihi takvim butonuna yaziyor
+ */
+void QtFtp::takvimKapandi(QDate date)
+{
+    ui->btnTarih->setDisabled(false);
+    ui->btnTarih->setText(date.toString(TARIH_FORMAT));
+}
+
+/*
+ * takvim butonuna tiklandigi zaman takvim nesnesi olusturup baslatir
+ */
+void QtFtp::btnTarihTiklandi(bool b)
+{
+    Takvim *takvim = new Takvim(QDate::fromString(ui->btnTarih->text(), TARIH_FORMAT));
+    connect(takvim,SIGNAL(takvimKapandi(QDate)),this,SLOT(takvimKapandi(QDate)));
+    takvim->show();
+
+    ui->btnTarih->setDisabled(true);
 }
 
 /*

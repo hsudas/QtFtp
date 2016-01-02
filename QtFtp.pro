@@ -15,10 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         qtftp.cpp \
-    ftpthread.cpp
+    ftpthread.cpp \
+    takvim.cpp
 
 HEADERS  += qtftp.h \
     ftpthread.h \
-    config.h
+    config.h \
+    takvim.h
 
 FORMS    += qtftp.ui

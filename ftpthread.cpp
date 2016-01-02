@@ -1,6 +1,5 @@
 #include "ftpthread.h"
 
-
 FtpThread::FtpThread()
 {
     ftp = new QFtp(this);
