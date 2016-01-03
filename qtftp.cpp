@@ -9,8 +9,35 @@ QtFtp::QtFtp(QWidget *parent) :
 
     ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
     connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
+    connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
+    connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
 
     threadCalistir();
+}
+
+/*
+ * listeden secim yapilinca listedenElemanSecildi(QListWidgetItem *) slotu calisiyor.
+ * secilen liste elemaninin ismini txtIsim alanina yaziyor
+ */
+void QtFtp::listedenElemanSecildi(QListWidgetItem *lwi)
+{
+    ui->txtIsim->setText(lwi->text());
+}
+
+/*
+ * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor. listeden seçim yapilmissa
+ * dosyaKaydet(QString, QString) sinyalini veriyor. secim yapilmamissa hata veriyor
+ */
+void QtFtp::btnKaydetTiklandi(bool b)
+{
+    if(ui->listWidget->selectedItems().isEmpty())
+    {
+        QMessageBox::warning(this,"hata","listeden seçim yapılmadı");
+    }
+    else
+    {
+        emit dosyaKaydet(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
+    }
 }
 
 /*
@@ -42,6 +69,7 @@ void QtFtp::threadCalistir()
 {
     mThread = new FtpThread();
     connect(mThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
+    connect(this,SIGNAL(dosyaKaydet(QString, QString)),mThread, SLOT(dosyaKaydet(QString, QString)));
     mThread->start();
 }
 
@@ -52,6 +80,7 @@ void QtFtp::threadCalistir()
  */
 void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
 {
+    ui->listWidget->clear();
     for(int i = 0; i < sl.size(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem (sl.at(i));

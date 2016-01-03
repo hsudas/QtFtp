@@ -3,11 +3,14 @@
 
 #include <QMainWindow>
 #include <QCalendarWidget>
+#include <QMessageBox>
+#include <QListWidgetItem>
 
 #include "ftpthread.h"
 #include "takvim.h"
 
-namespace Ui {
+namespace Ui
+{
 class QtFtp;
 }
 
@@ -24,11 +27,15 @@ public:
 private:
     Ui::QtFtp *ui;
 
+signals:
+    void dosyaKaydet(QString dosyaIsmi, QString yeniIsim);
+
 public slots:
     void dosyaListesiOlusturuldu(QStringList sl);
     void btnTarihTiklandi(bool b);
     void takvimKapandi(QDate date);
-
+    void btnKaydetTiklandi(bool b);
+    void listedenElemanSecildi(QListWidgetItem* lwi);
 };
 
 #endif // QTFTP_H

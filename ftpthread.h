@@ -17,6 +17,7 @@ public:
 
     QFtp *ftp;
     QStringList sl;
+    QUrl url;
 
     ~FtpThread();
 
@@ -26,6 +27,7 @@ signals:
 public slots:
     void doneSlot(bool);
     void listeOlustur(const QUrlInfo &urlInfo);
+    void dosyaKaydet(QString dosyaIsmi, QString yeniIsim);
 };
 
 #endif // FTPTHREAD_H
