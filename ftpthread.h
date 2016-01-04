@@ -11,15 +11,15 @@ class FtpThread : public QThread
 {
     Q_OBJECT
 
-public:
-    FtpThread();
-    void run();
-
+private:
     QFtp *ftp;
     QStringList sl;
     QUrl url;
 
+public:
+    FtpThread();
     ~FtpThread();
+    void run();
 
 signals:
     void dosyaListesiOlusturuldu(QStringList);

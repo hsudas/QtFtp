@@ -89,10 +89,10 @@ void QtFtp::faturaTuruListesiOlustu(QStringList sl)
  */
 void QtFtp::ftpThreadCalistir()
 {
-    mThread = new FtpThread();
-    connect(mThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
-    connect(this,SIGNAL(dosyaKaydet(QString, QString)),mThread, SLOT(dosyaKaydet(QString, QString)));
-    mThread->start();
+    ftpThread = new FtpThread();
+    connect(ftpThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
+    connect(this,SIGNAL(dosyaKaydet(QString, QString)),ftpThread, SLOT(dosyaKaydet(QString, QString)));
+    ftpThread->start();
 }
 
 /*
@@ -112,6 +112,7 @@ void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
 
 QtFtp::~QtFtp()
 {
-    delete mThread;
+    delete vtThread;
+    delete ftpThread;
     delete ui;
 }

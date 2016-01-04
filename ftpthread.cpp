@@ -7,9 +7,9 @@ FtpThread::FtpThread()
     connect(ftp, SIGNAL(listInfo(QUrlInfo)), this, SLOT(listeOlustur(QUrlInfo)));
     connect(ftp, SIGNAL(done(bool)),this, SLOT(doneSlot(bool)));
 
-    url.setHost(HOST);
-    url.setUserName(USERNAME);
-    url.setPassword(PASSWORD);
+    url.setHost(FTP_HOST);
+    url.setUserName(FTP_USERNAME);
+    url.setPassword(FTP_PASSWORD);
 }
 
 /*
@@ -23,10 +23,10 @@ void FtpThread::dosyaKaydet(QString dosyaIsmi, QString yeniIsim)
     {
         ftp->connectToHost(url.host(), url.port(21));
         ftp->login(QUrl::fromPercentEncoding(url.userName().toLatin1()), url.password());
-        ftp->cd(KLASOR_TARAYICI);
+        ftp->cd(FTP_KLASOR_TARAYICI);
     }
 
-    QString isim = QString("/%1/%2").arg(KLASOR_ARSIV).arg(yeniIsim);
+    QString isim = QString("/%1/%2").arg(FTP_KLASOR_ARSIV).arg(yeniIsim);
     ftp->rename(dosyaIsmi, isim);
 
     sl.clear();
@@ -66,7 +66,7 @@ void FtpThread::run()
 {
     ftp->connectToHost(url.host(), url.port(21));
     ftp->login(QUrl::fromPercentEncoding(url.userName().toLatin1()), url.password());
-    ftp->cd(KLASOR_TARAYICI);
+    ftp->cd(FTP_KLASOR_TARAYICI);
     ftp->list();
 
     ftp->close();

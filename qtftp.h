@@ -24,7 +24,7 @@ public:
     ~QtFtp();
     void ftpThreadCalistir();
     void vtThreadCalistir();
-    FtpThread *mThread;
+    FtpThread *ftpThread;
     VtThread *vtThread;
 
 private:
