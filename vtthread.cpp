@@ -11,7 +11,7 @@ VtThread::VtThread()
  */
 void VtThread::run()
 {
-    QSqlDatabase db=QSqlDatabase::addDatabase("QODBC3");
+    db = QSqlDatabase::addDatabase("QODBC3");
     db.setDatabaseName(VT_ISIM);
     db.setUserName(VT_USERNAME);
     db.setPassword(VT_PASSWORD);
@@ -31,6 +31,13 @@ void VtThread::run()
             listeFaturaTuru.append(name);
         }
 
+        db.close();
+
         emit faturaTuruListesiOlustu(listeFaturaTuru);
     }
+}
+
+VtThread::~VtThread()
+{
+    db.close();
 }

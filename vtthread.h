@@ -14,9 +14,11 @@ class VtThread : public QThread
 
 private:
     QStringList listeFaturaTuru;
+    QSqlDatabase db;
 
 public:
     VtThread();
+    ~VtThread();
     void run();
 
 signals:
