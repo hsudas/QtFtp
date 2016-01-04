@@ -33,6 +33,8 @@ void FtpThread::dosyaKaydet(QString dosyaIsmi, QString yeniIsim)
     ftp->list();
 
     ftp->close();
+
+    emit islemBitti();
 }
 
 /*

@@ -23,6 +23,7 @@ public:
 
 signals:
     void dosyaListesiOlusturuldu(QStringList);
+    void islemBitti();
 
 public slots:
     void doneSlot(bool);

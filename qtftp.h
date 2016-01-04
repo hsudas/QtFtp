@@ -24,14 +24,19 @@ public:
     ~QtFtp();
     void ftpThreadCalistir();
     void vtThreadCalistir();
-    FtpThread *ftpThread;
-    VtThread *vtThread;
+    void islemBitti();
+
 
 private:
     Ui::QtFtp *ui;
+    FtpThread *ftpThread;
+    VtThread *vtThread;
+    bool vtIslemiBitti;
+    bool ftpIslemiBitti;
 
 signals:
-    void dosyaKaydet(QString dosyaIsmi, QString yeniIsim);
+    void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
+    void dosyaKaydet_vt(QString tarih, QString faturaTuru, QString isim);
 
 public slots:
     void dosyaListesiOlusturuldu(QStringList sl);
@@ -40,6 +45,8 @@ public slots:
     void btnKaydetTiklandi(bool b);
     void listedenElemanSecildi(QListWidgetItem* lwi);
     void faturaTuruListesiOlustu(QStringList sl);
+    void islemBitti_vt();
+    void islemBitti_ftp();
 };
 
 #endif // QTFTP_H

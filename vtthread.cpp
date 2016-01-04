@@ -2,7 +2,10 @@
 
 VtThread::VtThread()
 {
-
+    db = QSqlDatabase::addDatabase("QODBC3");
+    db.setDatabaseName(VT_ISIM);
+    db.setUserName(VT_USERNAME);
+    db.setPassword(VT_PASSWORD);
 }
 
 /*
@@ -11,10 +14,6 @@ VtThread::VtThread()
  */
 void VtThread::run()
 {
-    db = QSqlDatabase::addDatabase("QODBC3");
-    db.setDatabaseName(VT_ISIM);
-    db.setUserName(VT_USERNAME);
-    db.setPassword(VT_PASSWORD);
     if (!db.open())
     {
         qDebug() << "vt hatasi"<<db.lastError();
@@ -35,6 +34,28 @@ void VtThread::run()
 
         emit faturaTuruListesiOlustu(listeFaturaTuru);
     }
+}
+
+void VtThread::dosyaKaydet(QString tarih, QString faturaTuru, QString isim)
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        bool b = query.exec(QString("INSERT INTO YENI_FATURA (ISIM, TUR, TARIH) VALUES('%1','%2','%3');").arg(isim).arg(faturaTuru).arg(tarih));
+
+        if(!b)
+        {
+            qDebug() << "vt hatasi 1"<<db.lastError();
+        }
+
+        db.close();
+    }
+
+    emit islemBitti();
 }
 
 VtThread::~VtThread()

@@ -14,6 +14,9 @@ QtFtp::QtFtp(QWidget *parent) :
     connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
     connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
 
+    vtIslemiBitti = false;
+    ftpIslemiBitti = false;
+
     ftpThreadCalistir();
     vtThreadCalistir();
 }
@@ -29,7 +32,8 @@ void QtFtp::listedenElemanSecildi(QListWidgetItem *lwi)
 
 /*
  * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor. listeden seçim yapilmissa
- * dosyaKaydet(QString, QString) sinyalini veriyor. secim yapilmamissa hata veriyor
+ * dosyaKaydet_ftp(QString, QString) ve dosyaKaydet_vt(QString, QString, Qstring) sinyalini veriyor.
+ * secim yapilmamissa ve isim alani bossa hata veriyor
  */
 void QtFtp::btnKaydetTiklandi(bool b)
 {
@@ -37,9 +41,14 @@ void QtFtp::btnKaydetTiklandi(bool b)
     {
         QMessageBox::warning(this,"hata","listeden seçim yapılmadı");
     }
+    else if( ui->txtIsim->text().isEmpty())
+    {
+        QMessageBox::warning(this,"hata","isim alanı boş");
+    }
     else
     {
-        emit dosyaKaydet(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
+        emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
+        emit dosyaKaydet_vt(ui->btnTarih->text(), ui->cbFaturaTuru->currentText(), ui->txtIsim->text());
     }
 }
 
@@ -71,7 +80,10 @@ void QtFtp::btnTarihTiklandi(bool b)
 void QtFtp::vtThreadCalistir()
 {
    vtThread = new VtThread();
+   connect(vtThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_vt()));
    connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
+   connect(this, SIGNAL(dosyaKaydet_vt(QString, QString, QString)), vtThread, SLOT(dosyaKaydet(QString, QString, QString)));
+
    vtThread->start();
 }
 
@@ -92,8 +104,9 @@ void QtFtp::faturaTuruListesiOlustu(QStringList sl)
 void QtFtp::ftpThreadCalistir()
 {
     ftpThread = new FtpThread();
+    connect(ftpThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_ftp()));
     connect(ftpThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
-    connect(this,SIGNAL(dosyaKaydet(QString, QString)),ftpThread, SLOT(dosyaKaydet(QString, QString)));
+    connect(this,SIGNAL(dosyaKaydet_ftp(QString, QString)),ftpThread, SLOT(dosyaKaydet(QString, QString)));
     ftpThread->start();
 }
 
@@ -109,6 +122,32 @@ void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
     {
         QListWidgetItem *item = new QListWidgetItem (sl.at(i));
         ui->listWidget->insertItem(ui->listWidget->currentRow(), item);
+    }
+}
+
+void QtFtp::islemBitti_ftp()
+{
+    ftpIslemiBitti = true;
+    islemBitti();
+}
+
+void QtFtp::islemBitti_vt()
+{
+    vtIslemiBitti = true;
+    islemBitti();
+}
+
+void QtFtp::islemBitti()
+{
+    if(vtIslemiBitti && ftpIslemiBitti)
+    {
+        QMessageBox::information(this,"bilgi","işlem bitti");
+        vtIslemiBitti = false;
+        ftpIslemiBitti = false;
+    }
+    else
+    {
+        qDebug()<<"hatass";
     }
 }
 

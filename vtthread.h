@@ -23,6 +23,10 @@ public:
 
 signals:
     void faturaTuruListesiOlustu(QStringList);
+    void islemBitti();
+
+public slots:
+    void dosyaKaydet(QString tarih, QString faturaTuru, QString isim);
 };
 
 #endif // VTTHREAD_H
