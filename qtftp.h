@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 
 #include "ftpthread.h"
+#include "vtthread.h"
 #include "takvim.h"
 
 namespace Ui
@@ -21,8 +22,10 @@ class QtFtp : public QMainWindow
 public:
     explicit QtFtp(QWidget *parent = 0);
     ~QtFtp();
-    void threadCalistir();
+    void ftpThreadCalistir();
+    void vtThreadCalistir();
     FtpThread *mThread;
+    VtThread *vtThread;
 
 private:
     Ui::QtFtp *ui;
@@ -36,6 +39,7 @@ public slots:
     void takvimKapandi(QDate date);
     void btnKaydetTiklandi(bool b);
     void listedenElemanSecildi(QListWidgetItem* lwi);
+    void faturaTuruListesiOlustu(QStringList sl);
 };
 
 #endif // QTFTP_H

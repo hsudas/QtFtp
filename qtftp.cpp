@@ -12,7 +12,8 @@ QtFtp::QtFtp(QWidget *parent) :
     connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
     connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
 
-    threadCalistir();
+    ftpThreadCalistir();
+    vtThreadCalistir();
 }
 
 /*
@@ -63,9 +64,30 @@ void QtFtp::btnTarihTiklandi(bool b)
 }
 
 /*
- * thread nesnesi olusturur ve baslatir
+ * vtthread nesnesi olusturur ve baslatir
  */
-void QtFtp::threadCalistir()
+void QtFtp::vtThreadCalistir()
+{
+   vtThread = new VtThread();
+   connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
+   vtThread->start();
+}
+
+/*
+ * vtthread faturaTuruListesiOlustu(QStringList) sinyalini verdigi zaman
+ * faturaTuruListesiOlustu(QStringList) slotu calisiyor. vt den alinan fatura turu listesini
+ * combobox'a yerlestiriyor
+ */
+void QtFtp::faturaTuruListesiOlustu(QStringList sl)
+{
+    ui->cbFaturaTuru->clear();
+    ui->cbFaturaTuru->addItems(sl);
+}
+
+/*
+ * ftpthread nesnesi olusturur ve baslatir
+ */
+void QtFtp::ftpThreadCalistir()
 {
     mThread = new FtpThread();
     connect(mThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));

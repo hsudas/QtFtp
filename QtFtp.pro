@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += network
+QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,11 +17,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         qtftp.cpp \
     ftpthread.cpp \
-    takvim.cpp
+    takvim.cpp \
+    vtthread.cpp
 
 HEADERS  += qtftp.h \
     ftpthread.h \
     config.h \
-    takvim.h
+    takvim.h \
+    vtthread.h
 
 FORMS    += qtftp.ui
