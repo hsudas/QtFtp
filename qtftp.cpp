@@ -5,6 +5,8 @@ QtFtp::QtFtp(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QtFtp)
 {
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+
     ui->setupUi(this);
 
     ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
