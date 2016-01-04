@@ -36,6 +36,10 @@ void VtThread::run()
     }
 }
 
+/*
+ * kaydet tusuna basilinca dosyaKaydet(QString, QString, QString) slotu cagriliyor.
+ * vt ye yeni kayit ekliyor.
+ */
 void VtThread::dosyaKaydet(QString tarih, QString faturaTuru, QString isim)
 {
     if (!db.open())

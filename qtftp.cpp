@@ -125,18 +125,29 @@ void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
     }
 }
 
+/*
+ * ftp threadi işini bitirdigi zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
+ * islemBitti_ftp() slotunu çağırıyor
+ */
 void QtFtp::islemBitti_ftp()
 {
     ftpIslemiBitti = true;
     islemBitti();
 }
 
+/*
+ * vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
+ * islemBitti_vt() slotunu çağırıyor
+ */
 void QtFtp::islemBitti_vt()
 {
     vtIslemiBitti = true;
     islemBitti();
 }
 
+/*
+ * ftp vt vt threadleri işlerini bitirince islemBitti() cagriliyor ve ekrana messageBox cikariliyor
+ */
 void QtFtp::islemBitti()
 {
     if(vtIslemiBitti && ftpIslemiBitti)
@@ -147,7 +158,7 @@ void QtFtp::islemBitti()
     }
     else
     {
-        qDebug()<<"hatass";
+        qDebug()<<"hata";
     }
 }
 
