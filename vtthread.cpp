@@ -2,10 +2,19 @@
 
 VtThread::VtThread()
 {
+#ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
     db.setDatabaseName(VT_ISIM);
     db.setUserName(VT_USERNAME);
     db.setPassword(VT_PASSWORD);
+#elif defined(Q_OS_WIN) || defined(Q_OS_WIN32)
+    db = QSqlDatabase::addDatabase("QODBC3");
+    db.setUserName(VT_USERNAME);
+    db.setPassword(VT_PASSWORD);
+    db.setDatabaseName(QString("DRIVER={%1};Server=%2;Database=%3;").arg(VT_WIN_DRIVER).arg(VT_IP).arg(VT_DATABASE_NAME));
+#else
+
+#endif
 }
 
 /*
