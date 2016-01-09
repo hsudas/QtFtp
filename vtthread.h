@@ -6,7 +6,7 @@
 #include <QSqlDatabase>
 #include <QtSql>
 
-#include "config.h"
+#include "global.h"
 
 class VtThread : public QThread
 {

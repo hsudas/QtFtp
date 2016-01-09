@@ -11,6 +11,7 @@
 #include "ftpthread.h"
 #include "vtthread.h"
 #include "takvim.h"
+#include "global.h"
 
 namespace Ui
 {

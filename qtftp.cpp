@@ -9,18 +9,27 @@ QtFtp::QtFtp(QWidget *parent) :
 
     ui->setupUi(this);
 
-    ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
-    connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
-    connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
-    connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
-    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
+    //ayar dosyasi yoksa uygulama kapanacak
+    if(!Global::config->dosyaVar)
+    {
+        QMessageBox::information(0, "hata", "ayar dosyası yok \n "+Global::config->ayarDosyasiYolu);
+        exit(0);
+    }
+    else
+    {
+        ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
+        connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
+        connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
+        connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
+        connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
 
-    vtIslemiBitti = false;
-    ftpIslemiBitti = false;
+        vtIslemiBitti = false;
+        ftpIslemiBitti = false;
 
-    ftpThreadCalistir();
-    vtThreadCalistir();
-    klasorAgaciOlustur();
+        ftpThreadCalistir();
+        vtThreadCalistir();
+        klasorAgaciOlustur();
+    }
 }
 
 /*
@@ -35,7 +44,7 @@ void QtFtp::klasorAgaciOlustur()
     ui->treeView->hideColumn(2);
     ui->treeView->hideColumn(3);
     //dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-    ui->treeView->setRootIndex((dirModel)->index(KLASOR_AGACI_ROOT));
+    ui->treeView->setRootIndex((dirModel)->index(Global::config->CNF_KLASOR_AGACI_ROOT));
 }
 
 /*
@@ -107,12 +116,12 @@ void QtFtp::btnTarihTiklandi(bool b)
  */
 void QtFtp::vtThreadCalistir()
 {
-   vtThread = new VtThread();
-   connect(vtThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_vt()));
-   connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
-   connect(this, SIGNAL(dosyaKaydet_vt(QString, QString, QString)), vtThread, SLOT(dosyaKaydet(QString, QString, QString)));
+    vtThread = new VtThread();
+    connect(vtThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_vt()));
+    connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
+    connect(this, SIGNAL(dosyaKaydet_vt(QString, QString, QString)), vtThread, SLOT(dosyaKaydet(QString, QString, QString)));
 
-   vtThread->start();
+    vtThread->start();
 }
 
 /*

@@ -4,14 +4,15 @@ VtThread::VtThread()
 {
 #ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
-    db.setDatabaseName(VT_ISIM);
-    db.setUserName(VT_USERNAME);
-    db.setPassword(VT_PASSWORD);
+    db.setDatabaseName(VT_ISIM);// /etc/odbc.ini dosyasinda tanimli baglanti
+    db.setUserName(Global::config->CNF_VT_USERNAME);
+    db.setPassword(Global::config->CNF_VT_PASSWORD);
+
 #elif defined(Q_OS_WIN) || defined(Q_OS_WIN32)
     db = QSqlDatabase::addDatabase("QODBC3");
-    db.setUserName(VT_USERNAME);
-    db.setPassword(VT_PASSWORD);
-    db.setDatabaseName(QString("DRIVER={%1};Server=%2;Database=%3;").arg(VT_WIN_DRIVER).arg(VT_IP).arg(VT_DATABASE_NAME));
+    db.setUserName(Global::config->CNF_VT_USERNAME);
+    db.setPassword(Global::config->CNF_VT_PASSWORD);
+    db.setDatabaseName(QString("DRIVER={SQL SERVER};Server=%1;Database=%2;").arg(Global::config->CNF_VT_IP).arg(Global::config->CNF_VT_DATABASE_NAME));
 #else
 
 #endif

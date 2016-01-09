@@ -18,12 +18,15 @@ SOURCES += main.cpp\
         qtftp.cpp \
     ftpthread.cpp \
     takvim.cpp \
-    vtthread.cpp
+    vtthread.cpp \
+    config.cpp \
+    global.cpp
 
 HEADERS  += qtftp.h \
     ftpthread.h \
-    config.h \
     takvim.h \
-    vtthread.h
+    vtthread.h \
+    config.h \
+    global.h
 
 FORMS    += qtftp.ui
