@@ -5,6 +5,8 @@
 #include <QCalendarWidget>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include <QFileSystemModel>
+#include <QDesktopServices>
 
 #include "ftpthread.h"
 #include "vtthread.h"
@@ -25,7 +27,7 @@ public:
     void ftpThreadCalistir();
     void vtThreadCalistir();
     void islemBitti();
-
+    void klasorAgaciOlustur();
 
 private:
     Ui::QtFtp *ui;
@@ -33,6 +35,7 @@ private:
     VtThread *vtThread;
     bool vtIslemiBitti;
     bool ftpIslemiBitti;
+    QFileSystemModel *dirModel;
 
 signals:
     void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
@@ -47,6 +50,7 @@ public slots:
     void faturaTuruListesiOlustu(QStringList sl);
     void islemBitti_vt();
     void islemBitti_ftp();
+    void klasorAgacinaCiftTiklandi(QModelIndex m);
 };
 
 #endif // QTFTP_H

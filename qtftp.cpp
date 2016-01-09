@@ -13,12 +13,40 @@ QtFtp::QtFtp(QWidget *parent) :
     connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
     connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
     connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
+    connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
 
     vtIslemiBitti = false;
     ftpIslemiBitti = false;
 
     ftpThreadCalistir();
     vtThreadCalistir();
+    klasorAgaciOlustur();
+}
+
+/*
+ * paylasilan klasorun icindeki dosyalari treeview a ekliyor
+ */
+void QtFtp::klasorAgaciOlustur()
+{
+    dirModel = new QFileSystemModel(this);
+    dirModel->setRootPath((QDir::currentPath()));
+    ui->treeView->setModel(dirModel);
+    ui->treeView->hideColumn(1);
+    ui->treeView->hideColumn(2);
+    ui->treeView->hideColumn(3);
+    //dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
+    ui->treeView->setRootIndex((dirModel)->index(KLASOR_AGACI_ROOT));
+}
+
+/*
+ * klasorAgaci treeView ında bir dosyaya cift tiklandigi zaman
+ * klasorAgacinaCiftTiklandi(QModelIndex) slotu calisiyor. cift tiklanan
+ * dosyayi aciyor
+ */
+void QtFtp::klasorAgacinaCiftTiklandi(QModelIndex m)
+{
+    QString url = dirModel->fileInfo(m).filePath();
+    QDesktopServices::openUrl(QUrl::fromLocalFile(url));
 }
 
 /*
