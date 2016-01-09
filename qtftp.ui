@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>419</width>
-    <height>343</height>
+    <width>641</width>
+    <height>477</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,9 +35,6 @@
     <item row="5" column="2">
      <widget class="QComboBox" name="cbFaturaTuru"/>
     </item>
-    <item row="3" column="1" colspan="2">
-     <widget class="QListWidget" name="listWidget"/>
-    </item>
     <item row="3" column="0">
      <widget class="QTreeView" name="treeView"/>
     </item>
@@ -48,7 +45,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>419</width>
+     <width>641</width>
      <height>23</height>
     </rect>
    </property>

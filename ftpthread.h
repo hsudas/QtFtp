@@ -1,34 +1,34 @@
-#ifndef FTPTHREAD_H
-#define FTPTHREAD_H
+//#ifndef FTPTHREAD_H
+//#define FTPTHREAD_H
 
-#include <QtCore>
-#include <QFtp>
-#include <QUrl>
+//#include <QtCore>
+//#include <QFtp>
+//#include <QUrl>
 
-#include "config.h"
+//#include "config.h"
 
-class FtpThread : public QThread
-{
-    Q_OBJECT
+//class FtpThread : public QThread
+//{
+//    Q_OBJECT
 
-private:
-    QFtp *ftp;
-    QStringList sl;
-    QUrl url;
+//private:
+//    QFtp *ftp;
+//    QStringList sl;
+//    QUrl url;
 
-public:
-    FtpThread();
-    ~FtpThread();
-    void run();
+//public:
+//    FtpThread();
+//    ~FtpThread();
+//    void run();
 
-signals:
-    void dosyaListesiOlusturuldu(QStringList);
-    void islemBitti();
+//signals:
+//    void dosyaListesiOlusturuldu(QStringList);
+//    void islemBitti();
 
-public slots:
-    void doneSlot(bool);
-    void listeOlustur(const QUrlInfo &urlInfo);
-    void dosyaKaydet(QString dosyaIsmi, QString yeniIsim);
-};
+//public slots:
+//    void doneSlot(bool);
+//    void listeOlustur(const QUrlInfo &urlInfo);
+//    void dosyaKaydet(QString dosyaIsmi, QString yeniIsim);
+//};
 
-#endif // FTPTHREAD_H
+//#endif // FTPTHREAD_H

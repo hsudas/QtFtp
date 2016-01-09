@@ -20,13 +20,13 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
-        connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
+        //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
 
         vtIslemiBitti = false;
-        ftpIslemiBitti = false;
+        //ftpIslemiBitti = false;
 
-        ftpThreadCalistir();
+        //ftpThreadCalistir();
         vtThreadCalistir();
         klasorAgaciOlustur();
     }
@@ -59,32 +59,23 @@ void QtFtp::klasorAgacinaCiftTiklandi(QModelIndex m)
 }
 
 /*
- * listeden secim yapilinca listedenElemanSecildi(QListWidgetItem *) slotu calisiyor.
- * secilen liste elemaninin ismini txtIsim alanina yaziyor
- */
-void QtFtp::listedenElemanSecildi(QListWidgetItem *lwi)
-{
-    ui->txtIsim->setText(lwi->text());
-}
-
-/*
  * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor. listeden seçim yapilmissa
  * dosyaKaydet_ftp(QString, QString) ve dosyaKaydet_vt(QString, QString, Qstring) sinyalini veriyor.
  * secim yapilmamissa ve isim alani bossa hata veriyor
  */
 void QtFtp::btnKaydetTiklandi(bool b)
 {
-    if(ui->listWidget->selectedItems().isEmpty())
-    {
-        QMessageBox::warning(this,"hata","listeden seçim yapılmadı");
-    }
-    else if( ui->txtIsim->text().isEmpty())
+    //    if(ui->listWidget->selectedItems().isEmpty())
+    //    {
+    //        QMessageBox::warning(this,"hata","listeden seçim yapılmadı");
+    //    }
+    if( ui->txtIsim->text().isEmpty())
     {
         QMessageBox::warning(this,"hata","isim alanı boş");
     }
     else
     {
-        emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
+        //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
         emit dosyaKaydet_vt(ui->btnTarih->text(), ui->cbFaturaTuru->currentText(), ui->txtIsim->text());
     }
 }
@@ -136,43 +127,6 @@ void QtFtp::faturaTuruListesiOlustu(QStringList sl)
 }
 
 /*
- * ftpthread nesnesi olusturur ve baslatir
- */
-void QtFtp::ftpThreadCalistir()
-{
-    ftpThread = new FtpThread();
-    connect(ftpThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_ftp()));
-    connect(ftpThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
-    connect(this,SIGNAL(dosyaKaydet_ftp(QString, QString)),ftpThread, SLOT(dosyaKaydet(QString, QString)));
-    ftpThread->start();
-}
-
-/*
- * thread den dosyaListesiOlusturuldu(QStringList) sinyali geldigi zaman
- * dosyaListesiOlusturuldu(QStringList) slotu basliyor. Olusan listeyi
- * arayüzdeki listWidgeta yazdiriyor
- */
-void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
-{
-    ui->listWidget->clear();
-    for(int i = 0; i < sl.size(); i++)
-    {
-        QListWidgetItem *item = new QListWidgetItem (sl.at(i));
-        ui->listWidget->insertItem(ui->listWidget->currentRow(), item);
-    }
-}
-
-/*
- * ftp threadi işini bitirdigi zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
- * islemBitti_ftp() slotunu çağırıyor
- */
-void QtFtp::islemBitti_ftp()
-{
-    ftpIslemiBitti = true;
-    islemBitti();
-}
-
-/*
  * vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
  * islemBitti_vt() slotunu çağırıyor
  */
@@ -183,10 +137,20 @@ void QtFtp::islemBitti_vt()
 }
 
 /*
- * ftp vt vt threadleri işlerini bitirince islemBitti() cagriliyor ve ekrana messageBox cikariliyor
+ * ftp ve vt threadleri işlerini bitirince islemBitti() cagriliyor ve ekrana messageBox cikariliyor
  */
 void QtFtp::islemBitti()
 {
+    if(vtIslemiBitti)
+    {
+        QMessageBox::information(this,"bilgi","işlem bitti");
+        vtIslemiBitti = false;
+    }
+    else
+    {
+        qDebug()<<"hata";
+    }
+    /*
     if(vtIslemiBitti && ftpIslemiBitti)
     {
         QMessageBox::information(this,"bilgi","işlem bitti");
@@ -197,11 +161,58 @@ void QtFtp::islemBitti()
     {
         qDebug()<<"hata";
     }
+    */
 }
 
 QtFtp::~QtFtp()
 {
     delete vtThread;
-    delete ftpThread;
+    //delete ftpThread;
     delete ui;
 }
+
+/*
+ * listeden secim yapilinca listedenElemanSecildi(QListWidgetItem *) slotu calisiyor.
+ * secilen liste elemaninin ismini txtIsim alanina yaziyor
+ */
+//void QtFtp::listedenElemanSecildi(QListWidgetItem *lwi)
+//{
+//    ui->txtIsim->setText(lwi->text());
+//}
+
+/*
+ * ftpthread nesnesi olusturur ve baslatir
+ */
+//void QtFtp::ftpThreadCalistir()
+//{
+//    ftpThread = new FtpThread();
+//    connect(ftpThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_ftp()));
+//    connect(ftpThread,SIGNAL(dosyaListesiOlusturuldu(QStringList)),this, SLOT(dosyaListesiOlusturuldu(QStringList)));
+//    connect(this,SIGNAL(dosyaKaydet_ftp(QString, QString)),ftpThread, SLOT(dosyaKaydet(QString, QString)));
+//    ftpThread->start();
+//}
+
+/*
+ * thread den dosyaListesiOlusturuldu(QStringList) sinyali geldigi zaman
+ * dosyaListesiOlusturuldu(QStringList) slotu basliyor. Olusan listeyi
+ * arayüzdeki listWidgeta yazdiriyor
+ */
+//void QtFtp::dosyaListesiOlusturuldu(QStringList sl)
+//{
+//    ui->listWidget->clear();
+//    for(int i = 0; i < sl.size(); i++)
+//    {
+//        QListWidgetItem *item = new QListWidgetItem (sl.at(i));
+//        ui->listWidget->insertItem(ui->listWidget->currentRow(), item);
+//    }
+//}
+
+/*
+ * ftp threadi işini bitirdigi zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
+ * islemBitti_ftp() slotunu çağırıyor
+ */
+//void QtFtp::islemBitti_ftp()
+//{
+//    ftpIslemiBitti = true;
+//    islemBitti();
+//}
