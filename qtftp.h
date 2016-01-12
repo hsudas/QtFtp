@@ -40,15 +40,18 @@ private:
 
 signals:
     //void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
-    void dosyaKaydet_vt(QString tarih, QString faturaTuru, QString isim);
+    void dosyaKaydet_vt(SqlSorgu s);
 
 public slots:
     void btnTarihTiklandi(bool b);
+    void btnYenileTiklandi(bool b);
     void takvimKapandi(QDate date);
     void btnKaydetTiklandi(bool b);
-    void faturaTuruListesiOlustu(QStringList sl);
+    //void faturaTuruListesiOlustu(QStringList sl);
+    void vtKayitAlindi(SqlSorgu srg);
     void islemBitti_vt();
     void klasorAgacinaCiftTiklandi(QModelIndex m);
+    void klasorAgacinaTiklandi(QModelIndex m);
     //void listedenElemanSecildi(QListWidgetItem* lwi);
     //void islemBitti_ftp();
     //void dosyaListesiOlusturuldu(QStringList sl);

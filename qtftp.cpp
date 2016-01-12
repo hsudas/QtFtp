@@ -20,8 +20,10 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
+        connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
+        connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
 
         vtIslemiBitti = false;
         //ftpIslemiBitti = false;
@@ -29,6 +31,15 @@ QtFtp::QtFtp(QWidget *parent) :
         //ftpThreadCalistir();
         vtThreadCalistir();
         klasorAgaciOlustur();
+
+        ui->tableWidget->setColumnCount(7);
+        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date");
+        ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+        ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+        //deneme amacli veriler
+        ui->cbDocumentType->addItems(QStringList()<<"dt1"<<"dt2"<<"dt3");
+        ui->cbVendorName->addItems(QStringList()<<"vn1"<<"vn2"<<"vn3");
     }
 }
 
@@ -48,6 +59,17 @@ void QtFtp::klasorAgaciOlustur()
 }
 
 /*
+ * klasorAgaci treeView ında bir dosyaya tiklandigi zaman
+ * klasorAgacinaTiklandi(QModelIndex) slotu calisiyor. tiklanan
+ * dosya ismini txtFilePath alanina yaziyor
+ */
+void QtFtp::klasorAgacinaTiklandi(QModelIndex m)
+{
+    QString url = dirModel->fileInfo(m).filePath();
+    ui->txtFilePath->setText(url);
+}
+
+/*
  * klasorAgaci treeView ında bir dosyaya cift tiklandigi zaman
  * klasorAgacinaCiftTiklandi(QModelIndex) slotu calisiyor. cift tiklanan
  * dosyayi aciyor
@@ -59,8 +81,18 @@ void QtFtp::klasorAgacinaCiftTiklandi(QModelIndex m)
 }
 
 /*
+ * btnYenile ye tiklandigi zaman btnYenileTiklandi(bool) slotu calisiyor.
+ * vt thread i baslatiyor
+ */
+void QtFtp::btnYenileTiklandi(bool b)
+{
+    ui->tableWidget->setRowCount(0);
+    vtThread->start();
+}
+
+/*
  * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor. listeden seçim yapilmissa
- * dosyaKaydet_ftp(QString, QString) ve dosyaKaydet_vt(QString, QString, Qstring) sinyalini veriyor.
+ * dosyaKaydet_ftp(QString, QString) ve dosyaKaydet_vt(SqlSorgu) sinyalini veriyor.
  * secim yapilmamissa ve isim alani bossa hata veriyor
  */
 void QtFtp::btnKaydetTiklandi(bool b)
@@ -69,14 +101,23 @@ void QtFtp::btnKaydetTiklandi(bool b)
     //    {
     //        QMessageBox::warning(this,"hata","listeden seçim yapılmadı");
     //    }
-    if( ui->txtIsim->text().isEmpty())
+    if( ui->txtFilePath->text().isEmpty())
     {
         QMessageBox::warning(this,"hata","isim alanı boş");
     }
     else
     {
+        SqlSorgu sqlsorgu;
+        sqlsorgu.vendorName = ui->cbVendorName->currentText();
+        sqlsorgu.documentType = ui->cbDocumentType->currentText();
+        sqlsorgu.amount = ui->txtTotalAmount->text();
+        QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
+        sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
+        sqlsorgu.filePath = ui->txtFilePath->text();
+        sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
+
         //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
-        emit dosyaKaydet_vt(ui->btnTarih->text(), ui->cbFaturaTuru->currentText(), ui->txtIsim->text());
+        emit dosyaKaydet_vt(sqlsorgu);
     }
 }
 
@@ -109,22 +150,40 @@ void QtFtp::vtThreadCalistir()
 {
     vtThread = new VtThread();
     connect(vtThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_vt()));
-    connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
-    connect(this, SIGNAL(dosyaKaydet_vt(QString, QString, QString)), vtThread, SLOT(dosyaKaydet(QString, QString, QString)));
+    //connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
+    connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
+    connect(this, SIGNAL(dosyaKaydet_vt(SqlSorgu)), vtThread, SLOT(dosyaKaydet(SqlSorgu)));
 
     vtThread->start();
 }
 
 /*
- * vtthread faturaTuruListesiOlustu(QStringList) sinyalini verdigi zaman
- * faturaTuruListesiOlustu(QStringList) slotu calisiyor. vt den alinan fatura turu listesini
- * combobox'a yerlestiriyor
+ * vtKayitAlindi(SqlSorgu) sinyali vtKayitAlindi(SqlSorgu) slotunu cagiriyor
+ * vt den alinan veriyi tablewidget a yaziyor
  */
-void QtFtp::faturaTuruListesiOlustu(QStringList sl)
+void QtFtp::vtKayitAlindi(SqlSorgu srg)
 {
-    ui->cbFaturaTuru->clear();
-    ui->cbFaturaTuru->addItems(sl);
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0,new QTableWidgetItem(srg.documentType));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1,new QTableWidgetItem(srg.vendorName));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2,new QTableWidgetItem(srg.invoiceNumber));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,3,new QTableWidgetItem(srg.amount));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,4,new QTableWidgetItem(srg.filePath));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,5,new QTableWidgetItem(srg.saveDate));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,6,new QTableWidgetItem(srg.invoiceDate));
 }
+
+///*
+// * vtthread faturaTuruListesiOlustu(QStringList) sinyalini verdigi zaman
+// * faturaTuruListesiOlustu(QStringList) slotu calisiyor. vt den alinan fatura turu listesini
+// * combobox'a yerlestiriyor
+// */
+//void QtFtp::faturaTuruListesiOlustu(QStringList sl)
+//{
+//    ui->cbDocumentType->clear();
+//    ui->cbDocumentType->addItems(sl);
+//}
 
 /*
  * vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor. islemBitti() sinyali

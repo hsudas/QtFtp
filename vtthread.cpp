@@ -2,6 +2,8 @@
 
 VtThread::VtThread()
 {
+    qRegisterMetaType<SqlSorgu>("SqlSorgu");
+
 #ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
     db.setDatabaseName(VT_ISIM);// /etc/odbc.ini dosyasinda tanimli baglanti
@@ -30,6 +32,23 @@ void VtThread::run()
     }
     else
     {
+        SqlSorgu srg;
+        QSqlQuery query;
+        query.exec("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE FROM FATURA2");
+        while (query.next())
+        {
+            srg.documentType=query.value(0).toString();
+            srg.vendorName=query.value(1).toString();
+            srg.invoiceNumber=query.value(2).toString();
+            srg.amount=query.value(3).toString();
+            srg.filePath=query.value(4).toString();
+            srg.saveDate=query.value(5).toString();
+            srg.saveDate=query.value(5).toString();
+
+            emit vtKayitAlindi(srg);
+        }
+
+        /*
         QSqlQuery query;
         query.exec("SELECT TUR FROM ROYAL.ROYAL.FATURA;");
 
@@ -42,15 +61,16 @@ void VtThread::run()
 
         db.close();
 
-        emit faturaTuruListesiOlustu(listeFaturaTuru);
+        emit faturaTuruListesiOlustu(listeFaturaTuru);*/
+
     }
 }
 
 /*
- * kaydet tusuna basilinca dosyaKaydet(QString, QString, QString) slotu cagriliyor.
+ * kaydet tusuna basilinca dosyaKaydet(SqlSorgu) slotu cagriliyor.
  * vt ye yeni kayit ekliyor.
  */
-void VtThread::dosyaKaydet(QString tarih, QString faturaTuru, QString isim)
+void VtThread::dosyaKaydet(SqlSorgu srg)
 {
     if (!db.open())
     {
@@ -59,8 +79,18 @@ void VtThread::dosyaKaydet(QString tarih, QString faturaTuru, QString isim)
     else
     {
         QSqlQuery query;
+        bool b = query.exec(
+                    QString("INSERT INTO FATURA2 (DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, INVOICE_DATE, SAVE_DATE) VALUES('%1','%2','%3','%4','%5','%6','%7');")
+                    .arg(srg.documentType)
+                    .arg(srg.vendorName)
+                    .arg(srg.invoiceNumber)
+                    .arg(srg.amount)
+                    .arg(srg.filePath)
+                    .arg(srg.invoiceDate)
+                    .arg(srg.saveDate));
+        /*
         bool b = query.exec(QString("INSERT INTO YENI_FATURA (ISIM, TUR, TARIH) VALUES('%1','%2','%3');").arg(isim).arg(faturaTuru).arg(tarih));
-
+        */
         if(!b)
         {
             qDebug() << "vt hatasi 1"<<db.lastError();
