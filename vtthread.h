@@ -14,7 +14,6 @@ class SqlSorgu
 public:
     QString vendorName;
     QString documentType;
-    QString createDate;
     QString saveDate;
     QString invoiceDate;
     QString amount;
@@ -29,11 +28,17 @@ class VtThread : public QThread
 private:
     QStringList listeFaturaTuru;
     QSqlDatabase db;
+    SqlSorgu sqlsrg;
 
 public:
     VtThread();
     ~VtThread();
     void run();
+
+    int ISLEM;
+
+    static const int ISLEM_TUM_KAYITLAR=0;
+    static const int ISLEM_ARAMA_SONUCU=1;
 
 signals:
     //void faturaTuruListesiOlustu(QStringList);
@@ -42,6 +47,9 @@ signals:
 
 public slots:
     void dosyaKaydet(SqlSorgu);
+    void setSqlSorgu(SqlSorgu, int);
+    void tumKayitlariGetir();
+    void aramaSonuclariniGetir();
 };
 
 

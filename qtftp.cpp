@@ -21,11 +21,12 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
+        connect(ui->btnAra, SIGNAL(clicked(bool)), this, SLOT(btnAraTiklandi(bool)));
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
 
-        vtIslemiBitti = false;
+        //vtIslemiBitti = false;
         //ftpIslemiBitti = false;
 
         //ftpThreadCalistir();
@@ -81,12 +82,45 @@ void QtFtp::klasorAgacinaCiftTiklandi(QModelIndex m)
 }
 
 /*
+ * thread basladigi zaman thread i baslatan diger tuslari etkisiz hale getiriyor
+ */
+void QtFtp::tusEtkisiz(bool b)
+{
+    ui->btnAra->setDisabled(b);
+    ui->btnYenile->setDisabled(b);
+    ui->btnKaydet->setDisabled(b);
+}
+
+/*
  * btnYenile ye tiklandigi zaman btnYenileTiklandi(bool) slotu calisiyor.
  * vt thread i baslatiyor
  */
 void QtFtp::btnYenileTiklandi(bool b)
 {
     ui->tableWidget->setRowCount(0);
+    tusEtkisiz(true);
+    vtThread->start();
+}
+
+/*
+ * btnArama ya tiklaninca btnAraTiklandi(bool) slotu calisiyor.
+ * SqlSorgu nesnesi olusturup ISLEM_ARAMA_SONUCU icin thread i baslatiyor
+ */
+void QtFtp::btnAraTiklandi(bool b)
+{
+    ui->tableWidget->setRowCount(0);
+
+    SqlSorgu sqlsorgu;
+    sqlsorgu.vendorName = ui->cbVendorName->currentText();
+    sqlsorgu.documentType = ui->cbDocumentType->currentText();
+    sqlsorgu.amount = ui->txtTotalAmount->text();
+    QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
+    sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
+    sqlsorgu.filePath = ui->txtFilePath->text();
+    sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
+
+    tusEtkisiz(true);
+    vtThread->setSqlSorgu(sqlsorgu, vtThread->ISLEM_ARAMA_SONUCU);
     vtThread->start();
 }
 
@@ -154,6 +188,7 @@ void QtFtp::vtThreadCalistir()
     connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
     connect(this, SIGNAL(dosyaKaydet_vt(SqlSorgu)), vtThread, SLOT(dosyaKaydet(SqlSorgu)));
 
+    tusEtkisiz(true);
     vtThread->start();
 }
 
@@ -174,11 +209,11 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,6,new QTableWidgetItem(srg.invoiceDate));
 }
 
-///*
-// * vtthread faturaTuruListesiOlustu(QStringList) sinyalini verdigi zaman
-// * faturaTuruListesiOlustu(QStringList) slotu calisiyor. vt den alinan fatura turu listesini
-// * combobox'a yerlestiriyor
-// */
+/*
+ * vtthread faturaTuruListesiOlustu(QStringList) sinyalini verdigi zaman
+ * faturaTuruListesiOlustu(QStringList) slotu calisiyor. vt den alinan fatura turu listesini
+ * combobox'a yerlestiriyor
+ */
 //void QtFtp::faturaTuruListesiOlustu(QStringList sl)
 //{
 //    ui->cbDocumentType->clear();
@@ -191,37 +226,39 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
  */
 void QtFtp::islemBitti_vt()
 {
-    vtIslemiBitti = true;
-    islemBitti();
+    tusEtkisiz(false);
+
+    //vtIslemiBitti = true;
+    //islemBitti();
 }
 
 /*
  * ftp ve vt threadleri işlerini bitirince islemBitti() cagriliyor ve ekrana messageBox cikariliyor
  */
-void QtFtp::islemBitti()
-{
-    if(vtIslemiBitti)
-    {
-        QMessageBox::information(this,"bilgi","işlem bitti");
-        vtIslemiBitti = false;
-    }
-    else
-    {
-        qDebug()<<"hata";
-    }
-    /*
-    if(vtIslemiBitti && ftpIslemiBitti)
-    {
-        QMessageBox::information(this,"bilgi","işlem bitti");
-        vtIslemiBitti = false;
-        ftpIslemiBitti = false;
-    }
-    else
-    {
-        qDebug()<<"hata";
-    }
-    */
-}
+//void QtFtp::islemBitti()
+//{
+//    if(vtIslemiBitti)
+//    {
+//        QMessageBox::information(this,"bilgi","işlem bitti");
+//        vtIslemiBitti = false;
+//    }
+//    else
+//    {
+//        qDebug()<<"hata";
+//    }
+//    /*
+//    if(vtIslemiBitti && ftpIslemiBitti)
+//    {
+//        QMessageBox::information(this,"bilgi","işlem bitti");
+//        vtIslemiBitti = false;
+//        ftpIslemiBitti = false;
+//    }
+//    else
+//    {
+//        qDebug()<<"hata";
+//    }
+//    */
+//}
 
 QtFtp::~QtFtp()
 {

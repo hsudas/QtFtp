@@ -26,14 +26,15 @@ public:
     explicit QtFtp(QWidget *parent = 0);
     ~QtFtp();
     void vtThreadCalistir();
-    void islemBitti();
+    //void islemBitti();
     void klasorAgaciOlustur();
     //void ftpThreadCalistir();
+    void tusEtkisiz(bool);
 
 private:
     Ui::QtFtp *ui;
     VtThread *vtThread;
-    bool vtIslemiBitti;
+    //bool vtIslemiBitti;
     QFileSystemModel *dirModel;
     //FtpThread *ftpThread;
     //bool ftpIslemiBitti;
@@ -45,6 +46,7 @@ signals:
 public slots:
     void btnTarihTiklandi(bool b);
     void btnYenileTiklandi(bool b);
+    void btnAraTiklandi(bool b);
     void takvimKapandi(QDate date);
     void btnKaydetTiklandi(bool b);
     //void faturaTuruListesiOlustu(QStringList sl);
