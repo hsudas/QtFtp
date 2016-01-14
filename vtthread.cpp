@@ -54,6 +54,7 @@ void VtThread::tumKayitlariGetir()
     {
         SqlSorgu srg;
         QSqlQuery query;
+        query.setForwardOnly(true);
         query.exec("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE FROM FATURA2");
         while (query.next())
         {
@@ -100,6 +101,7 @@ void VtThread::dosyaKaydet(SqlSorgu srg)
     else
     {
         QSqlQuery query;
+        query.setForwardOnly(true);
         bool b = query.exec(
                     QString("INSERT INTO FATURA2 (DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, INVOICE_DATE, SAVE_DATE) VALUES('%1','%2','%3','%4','%5','%6','%7');")
                     .arg(srg.documentType)
@@ -156,8 +158,8 @@ void VtThread::aramaSonuclariniGetir()
             sorgu.append(QString(" AND VENDOR_NAME='%1'").arg(sqlsrg.vendorName));
         }
 
-
         QSqlQuery query;
+        query.setForwardOnly(true);
         bool b = query.exec(sorgu);
         while (query.next())
         {
