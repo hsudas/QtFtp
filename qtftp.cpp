@@ -12,7 +12,7 @@ QtFtp::QtFtp(QWidget *parent) :
     //ayar dosyasi yoksa uygulama kapanacak
     if(!Global::config->dosyaVar)
     {
-        QMessageBox::information(0, "hata", "ayar dosyası yok \n "+Global::config->ayarDosyasiYolu);
+        QMessageBox::information(0, "hata", "ayar dosyası yok\n"+Global::config->ayarDosyasiYolu);
         exit(0);
     }
     else
@@ -39,8 +39,8 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
         //deneme amacli veriler
-        ui->cbDocumentType->addItems(QStringList()<<"dt1"<<"dt2"<<"dt3");
-        ui->cbVendorName->addItems(QStringList()<<"vn1"<<"vn2"<<"vn3");
+        ui->cbDocumentType->addItems(QStringList()<<""<<"dt1"<<"dt2"<<"dt3");
+        ui->cbVendorName->addItems(QStringList()<<""<<"vn1"<<"vn2"<<"vn3");
     }
 }
 
@@ -99,6 +99,7 @@ void QtFtp::btnYenileTiklandi(bool b)
 {
     ui->tableWidget->setRowCount(0);
     tusEtkisiz(true);
+    vtThread->setISLEM(vtThread->ISLEM_TUM_KAYITLAR);
     vtThread->start();
 }
 

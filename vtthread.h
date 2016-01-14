@@ -29,13 +29,13 @@ private:
     QStringList listeFaturaTuru;
     QSqlDatabase db;
     SqlSorgu sqlsrg;
+    int ISLEM;
 
 public:
     VtThread();
     ~VtThread();
     void run();
-
-    int ISLEM;
+    void setISLEM(int i){ISLEM = i;}
 
     static const int ISLEM_TUM_KAYITLAR=0;
     static const int ISLEM_ARAMA_SONUCU=1;
