@@ -22,6 +22,7 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
         connect(ui->btnAra, SIGNAL(clicked(bool)), this, SLOT(btnAraTiklandi(bool)));
+        connect(ui->btnTemizle, SIGNAL(clicked(bool)), this, SLOT(btnTemizleTiklandi(bool)));
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
@@ -89,6 +90,19 @@ void QtFtp::tusEtkisiz(bool b)
     ui->btnAra->setDisabled(b);
     ui->btnYenile->setDisabled(b);
     ui->btnKaydet->setDisabled(b);
+}
+
+/*
+ * btnTemizle ye tiklandigi zaman btnTemizleTiklandi(bool) slotu calisiyor.
+ * arayuzdeki giriş yapilan alanlari temizliyor.
+ */
+void QtFtp::btnTemizleTiklandi(bool b)
+{
+    ui->cbVendorName->setCurrentIndex(0);
+    ui->cbDocumentType->setCurrentIndex(0);
+    ui->txtFilePath->clear();
+    ui->txtTotalAmount->clear();
+    ui->txtInvoiceNumber->clear();
 }
 
 /*

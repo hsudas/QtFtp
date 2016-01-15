@@ -47,6 +47,7 @@ public slots:
     void btnTarihTiklandi(bool b);
     void btnYenileTiklandi(bool b);
     void btnAraTiklandi(bool b);
+    void btnTemizleTiklandi(bool b);
     void takvimKapandi(QDate date);
     void btnKaydetTiklandi(bool b);
     //void faturaTuruListesiOlustu(QStringList sl);
