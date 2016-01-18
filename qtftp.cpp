@@ -17,6 +17,22 @@ QtFtp::QtFtp(QWidget *parent) :
     }
     else
     {
+        //kullanici adini soran dialog
+        QInputDialog inputDialog;
+        inputDialog.setOptions(QInputDialog::NoButtons);
+        bool ok;
+
+        do
+        {
+            QString text = inputDialog.getText(this ,"","Kullanıcı Adı", QLineEdit::Normal,"", &ok);
+            kullaniciAdi = text;
+            if(!ok)//iptale tiklanirsa uygulamadan ciksin
+            {
+                exit(0);
+            }
+        }
+        while(kullaniciAdi.isEmpty());//kullanici adi girilene kadar sorsun
+
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
@@ -34,14 +50,10 @@ QtFtp::QtFtp(QWidget *parent) :
         vtThreadCalistir();
         klasorAgaciOlustur();
 
-        ui->tableWidget->setColumnCount(7);
-        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date");
+        ui->tableWidget->setColumnCount(8);
+        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
         ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-        //deneme amacli veriler
-        ui->cbDocumentType->addItems(QStringList()<<""<<"dt1"<<"dt2"<<"dt3");
-        ui->cbVendorName->addItems(QStringList()<<""<<"vn1"<<"vn2"<<"vn3");
     }
 }
 
@@ -165,6 +177,7 @@ void QtFtp::btnKaydetTiklandi(bool b)
         sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
         sqlsorgu.filePath = ui->txtFilePath->text();
         sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
+        sqlsorgu.userName = kullaniciAdi;
 
         tusEtkisiz(true);
         //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
@@ -256,6 +269,7 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,4,new QTableWidgetItem(srg.filePath));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,5,new QTableWidgetItem(srg.saveDate));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,6,new QTableWidgetItem(srg.invoiceDate));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,7,new QTableWidgetItem(srg.userName));
 }
 
 /*

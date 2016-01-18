@@ -76,7 +76,6 @@ void VtThread::documentTypeGetir()
 
         emit documentTypeAlindi(listeDocumentType);
     }
-
 }
 
 /**
@@ -120,7 +119,7 @@ void VtThread::tumKayitlariGetir()
         SqlSorgu srg;
         QSqlQuery query;
         query.setForwardOnly(true);
-        query.exec("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE FROM FATURA2");
+        query.exec("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE, USER_NAME FROM FATURA2");
         while (query.next())
         {
             srg.documentType=query.value(0).toString();
@@ -130,6 +129,7 @@ void VtThread::tumKayitlariGetir()
             srg.filePath=query.value(4).toString();
             srg.saveDate=query.value(5).toString();
             srg.invoiceDate=query.value(6).toString();
+            srg.userName=query.value(7).toString();
 
             emit vtKayitAlindi(srg);
         }
@@ -170,14 +170,15 @@ void VtThread::dosyaKaydet()
         QSqlQuery query;
         query.setForwardOnly(true);
         bool b = query.exec(
-                    QString("INSERT INTO FATURA2 (DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, INVOICE_DATE, SAVE_DATE) VALUES('%1','%2','%3','%4','%5','%6','%7');")
+                    QString("INSERT INTO FATURA2 (DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, INVOICE_DATE, SAVE_DATE, USER_NAME) VALUES('%1','%2','%3','%4','%5','%6','%7','%8');")
                     .arg(sqlsrg.documentType)
                     .arg(sqlsrg.vendorName)
                     .arg(sqlsrg.invoiceNumber)
                     .arg(sqlsrg.amount)
                     .arg(sqlsrg.filePath)
                     .arg(sqlsrg.invoiceDate)
-                    .arg(sqlsrg.saveDate));
+                    .arg(sqlsrg.saveDate)
+                    .arg(sqlsrg.userName));
         /*
         bool b = query.exec(QString("INSERT INTO YENI_FATURA (ISIM, TUR, TARIH) VALUES('%1','%2','%3');").arg(isim).arg(faturaTuru).arg(tarih));
         */

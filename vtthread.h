@@ -19,6 +19,7 @@ public:
     QString amount;
     QString invoiceNumber;
     QString filePath;
+    QString userName;
 };
 
 class VtThread : public QThread

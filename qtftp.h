@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 #include <QFileSystemModel>
 #include <QDesktopServices>
+#include <QInputDialog>
 
 //#include "ftpthread.h"
 #include "vtthread.h"
@@ -38,6 +39,7 @@ private:
     QFileSystemModel *dirModel;
     //FtpThread *ftpThread;
     //bool ftpIslemiBitti;
+    QString kullaniciAdi;
 
 signals:
     //void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
