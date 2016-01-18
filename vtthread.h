@@ -54,7 +54,7 @@ signals:
     void vtKayitAlindi(SqlSorgu);
 
 public slots:
-    void dosyaKaydet(SqlSorgu);
+    void dosyaKaydet();
     void setSqlSorgu(SqlSorgu, int);
     void tumKayitlariGetir();
     void aramaSonuclariniGetir();

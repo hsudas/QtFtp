@@ -36,6 +36,10 @@ void VtThread::run()
         aramaSonuclariniGetir();
         break;
 
+    case _ISLEM_KAYDET:
+        dosyaKaydet();
+        break;
+
     default:
         break;
     }
@@ -89,10 +93,10 @@ void VtThread::tumKayitlariGetir()
 }
 
 /*
- * kaydet tusuna basilinca dosyaKaydet(SqlSorgu) slotu cagriliyor.
+ * kaydet tusuna basilinca dosyaKaydet() slotu cagriliyor.
  * vt ye yeni kayit ekliyor.
  */
-void VtThread::dosyaKaydet(SqlSorgu srg)
+void VtThread::dosyaKaydet()
 {
     if (!db.open())
     {
@@ -104,13 +108,13 @@ void VtThread::dosyaKaydet(SqlSorgu srg)
         query.setForwardOnly(true);
         bool b = query.exec(
                     QString("INSERT INTO FATURA2 (DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, INVOICE_DATE, SAVE_DATE) VALUES('%1','%2','%3','%4','%5','%6','%7');")
-                    .arg(srg.documentType)
-                    .arg(srg.vendorName)
-                    .arg(srg.invoiceNumber)
-                    .arg(srg.amount)
-                    .arg(srg.filePath)
-                    .arg(srg.invoiceDate)
-                    .arg(srg.saveDate));
+                    .arg(sqlsrg.documentType)
+                    .arg(sqlsrg.vendorName)
+                    .arg(sqlsrg.invoiceNumber)
+                    .arg(sqlsrg.amount)
+                    .arg(sqlsrg.filePath)
+                    .arg(sqlsrg.invoiceDate)
+                    .arg(sqlsrg.saveDate));
         /*
         bool b = query.exec(QString("INSERT INTO YENI_FATURA (ISIM, TUR, TARIH) VALUES('%1','%2','%3');").arg(isim).arg(faturaTuru).arg(tarih));
         */
@@ -122,6 +126,7 @@ void VtThread::dosyaKaydet(SqlSorgu srg)
         db.close();
     }
 
+    tumKayitlariGetir();
     emit islemBitti(_ISLEM_KAYDET);
 }
 
@@ -163,8 +168,6 @@ void VtThread::aramaSonuclariniGetir()
         bool b = query.exec(sorgu);
         while (query.next())
         {
-            //qDebug()<<"sorgu : ";
-
             sqlsrg.documentType=query.value(0).toString();
             sqlsrg.vendorName=query.value(1).toString();
             sqlsrg.invoiceNumber=query.value(2).toString();

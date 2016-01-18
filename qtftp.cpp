@@ -168,7 +168,11 @@ void QtFtp::btnKaydetTiklandi(bool b)
 
         tusEtkisiz(true);
         //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
-        emit dosyaKaydet_vt(sqlsorgu);
+        //emit dosyaKaydet_vt(sqlsorgu);
+
+        ui->tableWidget->setRowCount(0);//thread in nihayetinde baştan dolcagi icin tabloyu boşaltiyorum
+        vtThread->setSqlSorgu(sqlsorgu, _ISLEM_KAYDET);
+        vtThread->start();
     }
 }
 
@@ -203,7 +207,7 @@ void QtFtp::vtThreadCalistir()
     connect(vtThread, SIGNAL(islemBitti(int)), this, SLOT(islemBitti_vt(int)));
     //connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
     connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
-    connect(this, SIGNAL(dosyaKaydet_vt(SqlSorgu)), vtThread, SLOT(dosyaKaydet(SqlSorgu)));
+    //connect(this, SIGNAL(dosyaKaydet_vt(SqlSorgu)), vtThread, SLOT(dosyaKaydet(SqlSorgu)));
 
     tusEtkisiz(true);
     vtThread->start();

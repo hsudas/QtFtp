@@ -41,7 +41,7 @@ private:
 
 signals:
     //void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
-    void dosyaKaydet_vt(SqlSorgu s);
+    //void dosyaKaydet_vt(SqlSorgu s);
 
 public slots:
     void btnTarihTiklandi(bool b);
