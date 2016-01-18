@@ -3,7 +3,7 @@
 VtThread::VtThread()
 {
     qRegisterMetaType<SqlSorgu>("SqlSorgu");
-    ISLEM = _ISLEM_TUM_KAYITLAR;
+    //ISLEM = _ISLEM_TUM_KAYITLAR;
 
 #ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
@@ -40,8 +40,69 @@ void VtThread::run()
         dosyaKaydet();
         break;
 
+    case _ISLEM_BASLANGIC:
+        documentTypeGetir();
+        vendorNameGetir();
+        tumKayitlariGetir();
+        break;
+
     default:
         break;
+    }
+}
+
+/**
+ * @brief VtThread::documentTypeGetir
+ * vt document_type tablosundan değerleri getirir
+ */
+void VtThread::documentTypeGetir()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QStringList listeDocumentType;
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        query.exec("SELECT DOCUMENT_TYPE FROM FATURA_DOCUMENT_TYPE");
+        while (query.next())
+        {
+            listeDocumentType.append(query.value(0).toString());
+        }
+
+        db.close();
+
+        emit documentTypeAlindi(listeDocumentType);
+    }
+
+}
+
+/**
+ * @brief VtThread::vendorNameGetir
+ * vt vendor_name tablosundan değerleri getirir
+ */
+void VtThread::vendorNameGetir()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QStringList listeVendorName;
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        query.exec("SELECT VENDOR_NAME FROM FATURA_VENDOR_NAME");
+        while (query.next())
+        {
+            listeVendorName.append(query.value(0).toString());
+        }
+
+        db.close();
+
+        emit vendorNameAlindi(listeVendorName);
     }
 }
 
@@ -72,6 +133,8 @@ void VtThread::tumKayitlariGetir()
 
             emit vtKayitAlindi(srg);
         }
+
+        db.close();
 
         /*
         QSqlQuery query;

@@ -26,7 +26,7 @@ class VtThread : public QThread
     Q_OBJECT
 
 private:
-    QStringList listeFaturaTuru;
+    //QStringList listeFaturaTuru;
     QSqlDatabase db;
     SqlSorgu sqlsrg;
     int ISLEM;
@@ -36,6 +36,8 @@ public:
     ~VtThread();
     void run();
     void setISLEM(int i){ISLEM = i;}
+    void documentTypeGetir();
+    void vendorNameGetir();
 
     /*
     //select işlem turleri
@@ -52,6 +54,8 @@ signals:
     //void faturaTuruListesiOlustu(QStringList);
     void islemBitti(int);
     void vtKayitAlindi(SqlSorgu);
+    void vendorNameAlindi(QStringList);
+    void documentTypeAlindi(QStringList);
 
 public slots:
     void dosyaKaydet();

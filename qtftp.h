@@ -44,6 +44,8 @@ signals:
     //void dosyaKaydet_vt(SqlSorgu s);
 
 public slots:
+    void vendorNameAlindi(QStringList);
+    void documentTypeAlindi(QStringList);
     void btnTarihTiklandi(bool b);
     void btnYenileTiklandi(bool b);
     void btnAraTiklandi(bool b);

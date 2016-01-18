@@ -204,6 +204,10 @@ void QtFtp::btnTarihTiklandi(bool b)
 void QtFtp::vtThreadCalistir()
 {
     vtThread = new VtThread();
+    vtThread->setISLEM(_ISLEM_BASLANGIC);
+
+    connect(vtThread, SIGNAL(vendorNameAlindi(QStringList)),this, SLOT(vendorNameAlindi(QStringList)));
+    connect(vtThread, SIGNAL(documentTypeAlindi(QStringList)),this, SLOT(documentTypeAlindi(QStringList)));
     connect(vtThread, SIGNAL(islemBitti(int)), this, SLOT(islemBitti_vt(int)));
     //connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
     connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
@@ -211,6 +215,30 @@ void QtFtp::vtThreadCalistir()
 
     tusEtkisiz(true);
     vtThread->start();
+}
+
+/**
+ * @brief QtFtp::vendorNameAlindi
+ * @param sl : vt deki değerlerden oluşan liste
+ * VtThread::vendorNameGetir() fonksiyonu işini bitirince VtThread::vendorNameAlindi() sinyalini verir.
+ * bu sinyal QtFtp::vendorNameAlindi() slotunu cagirir. Bu slot cbVendorName combobox ını doldurur.
+ */
+void QtFtp::vendorNameAlindi(QStringList sl)
+{
+    ui->cbVendorName->clear();
+    ui->cbVendorName->addItems(sl);
+}
+
+/**
+ * @brief QtFtp::documentTypeAlindi
+ * @param sl : vt deki değerlerden oluşan liste
+ * VtThread::documentTypeAlindi() fonksiyonu işini bitirince VtThread::documentTypeAlindi() sinyalini verir.
+ * bu sinyal QtFtp::documentTypeAlindi() slotunu cagirir. Bu slot cbDocumentType combobox ını doldurur.
+ */
+void QtFtp::documentTypeAlindi(QStringList sl)
+{
+    ui->cbDocumentType->clear();
+    ui->cbDocumentType->addItems(sl);
 }
 
 /*

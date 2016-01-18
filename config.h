@@ -11,9 +11,10 @@
 #define _ISLEM_ARAMA_SONUCU  1
 
 //vt işlem turleri
-#define _ISLEM_KAYDET    3
-#define _ISLEM_YENILE    4
-#define _ISLEM_ARAMA     5
+#define _ISLEM_KAYDET       3
+#define _ISLEM_YENILE       4
+#define _ISLEM_ARAMA        5
+#define _ISLEM_BASLANGIC    6
 
 class Config
 {
