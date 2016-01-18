@@ -160,6 +160,7 @@ void QtFtp::btnKaydetTiklandi(bool b)
         sqlsorgu.vendorName = ui->cbVendorName->currentText();
         sqlsorgu.documentType = ui->cbDocumentType->currentText();
         sqlsorgu.amount = ui->txtTotalAmount->text();
+        sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
         QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
         sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
         sqlsorgu.filePath = ui->txtFilePath->text();
