@@ -64,7 +64,7 @@ void VtThread::tumKayitlariGetir()
             srg.amount=query.value(3).toString();
             srg.filePath=query.value(4).toString();
             srg.saveDate=query.value(5).toString();
-            srg.saveDate=query.value(5).toString();
+            srg.invoiceDate=query.value(6).toString();
 
             emit vtKayitAlindi(srg);
         }
