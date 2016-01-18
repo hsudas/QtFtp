@@ -3,7 +3,7 @@
 VtThread::VtThread()
 {
     qRegisterMetaType<SqlSorgu>("SqlSorgu");
-    ISLEM = ISLEM_TUM_KAYITLAR;
+    ISLEM = _ISLEM_TUM_KAYITLAR;
 
 #ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
@@ -28,11 +28,11 @@ void VtThread::run()
 {
     switch (ISLEM)
     {
-    case ISLEM_TUM_KAYITLAR:
+    case _ISLEM_TUM_KAYITLAR:
         tumKayitlariGetir();
         break;
 
-    case ISLEM_ARAMA_SONUCU:
+    case _ISLEM_ARAMA_SONUCU:
         aramaSonuclariniGetir();
         break;
 
@@ -85,7 +85,7 @@ void VtThread::tumKayitlariGetir()
         emit faturaTuruListesiOlustu(listeFaturaTuru);*/
     }
 
-    emit islemBitti();
+    emit islemBitti(_ISLEM_YENILE);
 }
 
 /*
@@ -122,7 +122,7 @@ void VtThread::dosyaKaydet(SqlSorgu srg)
         db.close();
     }
 
-    emit islemBitti();
+    emit islemBitti(_ISLEM_KAYDET);
 }
 
 /*
@@ -179,7 +179,7 @@ void VtThread::aramaSonuclariniGetir()
         db.close();
     }
 
-    emit islemBitti();
+    emit islemBitti(_ISLEM_ARAMA);
 }
 
 /*

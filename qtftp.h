@@ -52,7 +52,7 @@ public slots:
     void btnKaydetTiklandi(bool b);
     //void faturaTuruListesiOlustu(QStringList sl);
     void vtKayitAlindi(SqlSorgu srg);
-    void islemBitti_vt();
+    void islemBitti_vt(int);
     void klasorAgacinaCiftTiklandi(QModelIndex m);
     void klasorAgacinaTiklandi(QModelIndex m);
     //void listedenElemanSecildi(QListWidgetItem* lwi);

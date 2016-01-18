@@ -113,7 +113,7 @@ void QtFtp::btnYenileTiklandi(bool b)
 {
     ui->tableWidget->setRowCount(0);
     tusEtkisiz(true);
-    vtThread->setISLEM(vtThread->ISLEM_TUM_KAYITLAR);
+    vtThread->setISLEM(_ISLEM_TUM_KAYITLAR);
     vtThread->start();
 }
 
@@ -135,7 +135,7 @@ void QtFtp::btnAraTiklandi(bool b)
     sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
 
     tusEtkisiz(true);
-    vtThread->setSqlSorgu(sqlsorgu, vtThread->ISLEM_ARAMA_SONUCU);
+    vtThread->setSqlSorgu(sqlsorgu, _ISLEM_ARAMA_SONUCU);
     vtThread->start();
 }
 
@@ -166,6 +166,7 @@ void QtFtp::btnKaydetTiklandi(bool b)
         sqlsorgu.filePath = ui->txtFilePath->text();
         sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
 
+        tusEtkisiz(true);
         //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
         emit dosyaKaydet_vt(sqlsorgu);
     }
@@ -199,7 +200,7 @@ void QtFtp::btnTarihTiklandi(bool b)
 void QtFtp::vtThreadCalistir()
 {
     vtThread = new VtThread();
-    connect(vtThread, SIGNAL(islemBitti()), this, SLOT(islemBitti_vt()));
+    connect(vtThread, SIGNAL(islemBitti(int)), this, SLOT(islemBitti_vt(int)));
     //connect(vtThread, SIGNAL(faturaTuruListesiOlustu(QStringList)), this, SLOT(faturaTuruListesiOlustu(QStringList)));
     connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
     connect(this, SIGNAL(dosyaKaydet_vt(SqlSorgu)), vtThread, SLOT(dosyaKaydet(SqlSorgu)));
@@ -237,12 +238,24 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
 //}
 
 /*
- * vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor. islemBitti() sinyali
- * islemBitti_vt() slotunu çağırıyor
+ * vt threadi işini bitirdiği zaman islemBitti(int) sinyalini veriyor. islemBitti(int) sinyali
+ * islemBitti_vt(int) slotunu çağırıyor
  */
-void QtFtp::islemBitti_vt()
+void QtFtp::islemBitti_vt(int islemTuru)
 {
     tusEtkisiz(false);
+
+    switch (islemTuru) {
+    case _ISLEM_KAYDET:
+        QMessageBox::information(this,"bilgi","kaydedildi");
+        break;
+    case _ISLEM_ARAMA:
+        break;
+    case _ISLEM_YENILE:
+        break;
+    default:
+        break;
+    }
 
     //vtIslemiBitti = true;
     //islemBitti();

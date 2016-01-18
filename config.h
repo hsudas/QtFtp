@@ -6,6 +6,15 @@
 #define TARIH_FORMAT        "yyyy-MM-dd"
 #define VT_ISIM             "freetds-baglanti1"
 
+//select işlem turleri
+#define _ISLEM_TUM_KAYITLAR  0
+#define _ISLEM_ARAMA_SONUCU  1
+
+//vt işlem turleri
+#define _ISLEM_KAYDET    0
+#define _ISLEM_YENILE    1
+#define _ISLEM_ARAMA     2
+
 class Config
 {
 public:

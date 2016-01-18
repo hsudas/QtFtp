@@ -37,12 +37,20 @@ public:
     void run();
     void setISLEM(int i){ISLEM = i;}
 
+    /*
+    //select işlem turleri
     static const int ISLEM_TUM_KAYITLAR=0;
     static const int ISLEM_ARAMA_SONUCU=1;
 
+    //vt işlem turleri
+    static const int ISLEM_KAYDET=0;
+    static const int ISLEM_YENILE=1;
+    static const int ISLEM_ARAMA=2;
+    */
+
 signals:
     //void faturaTuruListesiOlustu(QStringList);
-    void islemBitti();
+    void islemBitti(int);
     void vtKayitAlindi(SqlSorgu);
 
 public slots:
