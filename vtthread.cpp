@@ -130,6 +130,7 @@ void VtThread::documentTypeGetir()
     else
     {
         QStringList listeDocumentType;
+        listeDocumentType.append("");
         QSqlQuery query;
         query.setForwardOnly(true);
         query.exec("SELECT DOCUMENT_TYPE FROM FATURA_DOCUMENT_TYPE");
@@ -157,6 +158,7 @@ void VtThread::vendorNameGetir()
     else
     {
         QStringList listeVendorName;
+        listeVendorName.append("");
         QSqlQuery query;
         query.setForwardOnly(true);
         query.exec("SELECT VENDOR_NAME FROM FATURA_VENDOR_NAME");
