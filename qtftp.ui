@@ -186,6 +186,14 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionAdd_Document_Type"/>
+    <addaction name="actionAdd_Vendor_Name"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -196,6 +204,16 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionAdd_Document_Type">
+   <property name="text">
+    <string>Add Document Type</string>
+   </property>
+  </action>
+  <action name="actionAdd_Vendor_Name">
+   <property name="text">
+    <string>Add Vendor Name</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

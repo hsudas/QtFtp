@@ -16,6 +16,10 @@
 #define _ISLEM_ARAMA        5
 #define _ISLEM_BASLANGIC    6
 
+//insert islemleri
+#define _ISLEM_EKLE_VENDOR_NAME     7
+#define _ISLEM_EKLE_DOCUMENT_TYPE   8
+
 class Config
 {
 public:

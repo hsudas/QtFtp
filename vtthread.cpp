@@ -46,8 +46,74 @@ void VtThread::run()
         tumKayitlariGetir();
         break;
 
+    case _ISLEM_EKLE_VENDOR_NAME:
+        vendorNameEkle();
+        break;
+
+    case _ISLEM_EKLE_DOCUMENT_TYPE:
+        documentTypeEkle();
+        break;
+
     default:
         break;
+    }
+}
+
+/**
+ * @brief VtThread::documentTypeEkle
+ * ana thread den gelen veriyi vt ye kaydeder
+ */
+void VtThread::documentTypeEkle()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        bool b = query.exec(
+                    QString("INSERT INTO FATURA_DOCUMENT_TYPE (DOCUMENT_TYPE) VALUES('%1');")
+                    .arg(kaydedilecekVeri));
+        if(!b)
+        {
+            qDebug() << "vt hatasi 1"<<db.lastError();
+        }
+
+        db.close();
+
+        documentTypeGetir();
+        emit islemBitti(_ISLEM_EKLE_DOCUMENT_TYPE);
+    }
+}
+
+/**
+ * @brief VtThread::vendorNameEkle
+ * ana thread den gelen veriyi vt ye kaydeder
+ */
+void VtThread::vendorNameEkle()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        bool b = query.exec(
+                    QString("INSERT INTO FATURA_VENDOR_NAME (VENDOR_NAME) VALUES('%1');")
+                    .arg(kaydedilecekVeri));
+        if(!b)
+        {
+            qDebug() << "vt hatasi 1"<<db.lastError();
+        }
+
+        db.close();
+
+        vendorNameGetir();
+        emit islemBitti(_ISLEM_EKLE_VENDOR_NAME);
     }
 }
 
@@ -252,11 +318,7 @@ void VtThread::aramaSonuclariniGetir()
 /*
  * SqlSorgu nesnesini ve ISLEM tipini set eder.
  */
-void VtThread::setSqlSorgu(SqlSorgu srg, int islem)
-{
-    ISLEM = islem;
-    sqlsrg = srg;
-}
+
 
 VtThread::~VtThread()
 {

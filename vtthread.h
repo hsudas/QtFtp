@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QtSql>
+#include <QInputDialog>
 
 #include "global.h"
 
@@ -30,6 +31,7 @@ private:
     //QStringList listeFaturaTuru;
     QSqlDatabase db;
     SqlSorgu sqlsrg;
+    QString kaydedilecekVeri;
     int ISLEM;
 
 public:
@@ -37,19 +39,12 @@ public:
     ~VtThread();
     void run();
     void setISLEM(int i){ISLEM = i;}
+    void setISLEM(QString veri, int i){kaydedilecekVeri = veri;ISLEM = i;}
+    void setISLEM(SqlSorgu srg, int i){sqlsrg = srg;ISLEM = i;}
     void documentTypeGetir();
     void vendorNameGetir();
-
-    /*
-    //select işlem turleri
-    static const int ISLEM_TUM_KAYITLAR=0;
-    static const int ISLEM_ARAMA_SONUCU=1;
-
-    //vt işlem turleri
-    static const int ISLEM_KAYDET=0;
-    static const int ISLEM_YENILE=1;
-    static const int ISLEM_ARAMA=2;
-    */
+    void vendorNameEkle();
+    void documentTypeEkle();
 
 signals:
     //void faturaTuruListesiOlustu(QStringList);
@@ -60,7 +55,6 @@ signals:
 
 public slots:
     void dosyaKaydet();
-    void setSqlSorgu(SqlSorgu, int);
     void tumKayitlariGetir();
     void aramaSonuclariniGetir();
 };

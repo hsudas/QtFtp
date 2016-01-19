@@ -42,6 +42,8 @@ QtFtp::QtFtp(QWidget *parent) :
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
+        connect(ui->actionAdd_Vendor_Name, SIGNAL(triggered(bool)), this, SLOT(vendorNameEkle(bool)));
+        connect(ui->actionAdd_Document_Type, SIGNAL(triggered(bool)), this, SLOT(documentTypeEkle(bool)));
 
         //vtIslemiBitti = false;
         //ftpIslemiBitti = false;
@@ -54,6 +56,46 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
         ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    }
+}
+
+/**
+ * @brief QtFtp::documentTypeEkle
+ * file->add document type secenegi QtFtp::documentTypeEkle() slotunu cagiriyor.
+ * bu slot ekrana input dialog cikariyor burada girilen veriyi kaydetmek
+ * icin vt threadini baslatiyor
+ */
+void QtFtp::documentTypeEkle(bool b)
+{
+    QInputDialog inputDialog;
+    inputDialog.setOptions(QInputDialog::NoButtons);
+    bool ok;
+
+    QString documentType = inputDialog.getText(this ,"","Document Type", QLineEdit::Normal,"", &ok);
+    if(ok)//iptale tiklanirsa uygulamadan ciksin
+    {
+        vtThread->setISLEM(documentType, _ISLEM_EKLE_DOCUMENT_TYPE);
+        vtThread->start();
+    }
+}
+
+/**
+ * @brief QtFtp::vendorNameEkle
+ * file->add vendor name secenegi QtFtp::vendorNameEkle() slotunu cagiriyor.
+ * bu slot ekrana input dialog cikariyor burada girilen veriyi kaydetmek
+ * icin vt threadini baslatiyor
+ */
+void QtFtp::vendorNameEkle(bool b)
+{
+    QInputDialog inputDialog;
+    inputDialog.setOptions(QInputDialog::NoButtons);
+    bool ok;
+
+    QString vendorName = inputDialog.getText(this ,"","Vendor Name", QLineEdit::Normal,"", &ok);
+    if(ok)//iptale tiklanirsa uygulamadan ciksin
+    {
+        vtThread->setISLEM(vendorName, _ISLEM_EKLE_VENDOR_NAME);
+        vtThread->start();
     }
 }
 
@@ -102,6 +144,9 @@ void QtFtp::tusEtkisiz(bool b)
     ui->btnAra->setDisabled(b);
     ui->btnYenile->setDisabled(b);
     ui->btnKaydet->setDisabled(b);
+    ui->btnTemizle->setDisabled(b);
+    ui->actionAdd_Document_Type->setDisabled(b);
+    ui->actionAdd_Vendor_Name->setDisabled(b);
 }
 
 /*
@@ -147,7 +192,7 @@ void QtFtp::btnAraTiklandi(bool b)
     sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
 
     tusEtkisiz(true);
-    vtThread->setSqlSorgu(sqlsorgu, _ISLEM_ARAMA_SONUCU);
+    vtThread->setISLEM(sqlsorgu, _ISLEM_ARAMA_SONUCU);
     vtThread->start();
 }
 
@@ -184,7 +229,7 @@ void QtFtp::btnKaydetTiklandi(bool b)
         //emit dosyaKaydet_vt(sqlsorgu);
 
         ui->tableWidget->setRowCount(0);//thread in nihayetinde baştan dolcagi icin tabloyu boşaltiyorum
-        vtThread->setSqlSorgu(sqlsorgu, _ISLEM_KAYDET);
+        vtThread->setISLEM(sqlsorgu, _ISLEM_KAYDET);
         vtThread->start();
     }
 }
@@ -293,11 +338,17 @@ void QtFtp::islemBitti_vt(int islemTuru)
 
     switch (islemTuru) {
     case _ISLEM_KAYDET:
-        QMessageBox::information(this,"bilgi","kaydedildi");
+        QMessageBox::information(this,"bilgi","saved");
         break;
     case _ISLEM_ARAMA:
         break;
     case _ISLEM_YENILE:
+        break;
+    case _ISLEM_EKLE_VENDOR_NAME:
+        QMessageBox::information(this,"bilgi","vendor name added");
+        break;
+    case _ISLEM_EKLE_DOCUMENT_TYPE:
+        QMessageBox::information(this,"bilgi","document type added");
         break;
     default:
         break;
