@@ -34,6 +34,7 @@ QtFtp::QtFtp(QWidget *parent) :
         while(kullaniciAdi.isEmpty());//kullanici adi girilene kadar sorsun
 
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
+        ui->btnTarih2->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
@@ -186,10 +187,13 @@ void QtFtp::btnAraTiklandi(bool b)
     sqlsorgu.vendorName = ui->cbVendorName->currentText();
     sqlsorgu.documentType = ui->cbDocumentType->currentText();
     sqlsorgu.amount = ui->txtTotalAmount->text();
-    QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
-    sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
+    //QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
+    //sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
+    sqlsorgu.invoiceDate = ui->btnTarih->text();
+    sqlsorgu.invoiceDate2 = ui->btnTarih2->text();
     sqlsorgu.filePath = ui->txtFilePath->text();
-    sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
+    sqlsorgu.userName = kullaniciAdi;
+    //sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
 
     tusEtkisiz(true);
     vtThread->setISLEM(sqlsorgu, _ISLEM_ARAMA_SONUCU);

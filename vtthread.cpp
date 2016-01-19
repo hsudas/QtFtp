@@ -271,7 +271,7 @@ void VtThread::aramaSonuclariniGetir()
     }
     else
     {
-        QString sorgu = QString("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE FROM FATURA2 WHERE INVOICE_DATE='%1'").arg(sqlsrg.invoiceDate);
+        QString sorgu = QString("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE, USER_NAME FROM FATURA2 WHERE INVOICE_DATE >= '%1' AND INVOICE_DATE <= '%2'").arg(sqlsrg.invoiceDate).arg(sqlsrg.invoiceDate2);
         if(!sqlsrg.documentType.isEmpty())
         {
             sorgu.append(QString(" AND DOCUMENT_TYPE='%1'").arg(sqlsrg.documentType));
@@ -292,10 +292,16 @@ void VtThread::aramaSonuclariniGetir()
         {
             sorgu.append(QString(" AND VENDOR_NAME='%1'").arg(sqlsrg.vendorName));
         }
+        /*
+        if(!sqlsrg.userName.isEmpty())
+        {
+            sorgu.append(QString(" AND USER_NAME='%1'").arg(sqlsrg.userName));
+        }
+        */
 
         QSqlQuery query;
         query.setForwardOnly(true);
-        bool b = query.exec(sorgu);
+        query.exec(sorgu);
         while (query.next())
         {
             sqlsrg.documentType=query.value(0).toString();
@@ -304,7 +310,8 @@ void VtThread::aramaSonuclariniGetir()
             sqlsrg.amount=query.value(3).toString();
             sqlsrg.filePath=query.value(4).toString();
             sqlsrg.saveDate=query.value(5).toString();
-            sqlsrg.saveDate=query.value(5).toString();
+            sqlsrg.invoiceDate=query.value(6).toString();
+            sqlsrg.userName=query.value(7).toString();
 
             emit vtKayitAlindi(sqlsrg);
         }
@@ -314,11 +321,6 @@ void VtThread::aramaSonuclariniGetir()
 
     emit islemBitti(_ISLEM_ARAMA);
 }
-
-/*
- * SqlSorgu nesnesini ve ISLEM tipini set eder.
- */
-
 
 VtThread::~VtThread()
 {

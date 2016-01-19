@@ -17,6 +17,7 @@ public:
     QString documentType;
     QString saveDate;
     QString invoiceDate;
+    QString invoiceDate2;
     QString amount;
     QString invoiceNumber;
     QString filePath;
