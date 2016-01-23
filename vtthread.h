@@ -13,6 +13,7 @@
 class SqlSorgu
 {
 public:
+    QString id;
     QString vendorName;
     QString documentType;
     QString saveDate;

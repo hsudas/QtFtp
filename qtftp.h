@@ -46,6 +46,7 @@ signals:
     //void dosyaKaydet_vt(SqlSorgu s);
 
 public slots:
+    void tableWidgetTiklandi(QModelIndex);
     void vendorNameEkle(bool);
     void documentTypeEkle(bool);
     void vendorNameAlindi(QStringList);

@@ -20,6 +20,17 @@
 #define _ISLEM_EKLE_VENDOR_NAME     7
 #define _ISLEM_EKLE_DOCUMENT_TYPE   8
 
+//tableWidget sutunlari
+#define SUTUN_ID                0
+#define SUTUN_DOCUMENT_TYPE     1
+#define SUTUN_VENDOR_NAME       2
+#define SUTUN_INVOICE_NUMBER    3
+#define SUTUN_TOTAL_AMOUNT      4
+#define SUTUN_FILE_PATH         5
+#define SUTUN_SAVE_DATE         6
+#define SUTUN_INVOICE_DATE      7
+#define SUTUN_USER_NAME         8
+
 class Config
 {
 public:

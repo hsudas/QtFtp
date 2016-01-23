@@ -187,17 +187,18 @@ void VtThread::tumKayitlariGetir()
         SqlSorgu srg;
         QSqlQuery query;
         query.setForwardOnly(true);
-        query.exec("SELECT DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE, USER_NAME FROM FATURA2");
+        query.exec("SELECT ID,DOCUMENT_TYPE, VENDOR_NAME, INVOICE_NUMBER, TOTAL_AMOUNT, FILE_PATH, SAVE_DATE, INVOICE_DATE, USER_NAME FROM FATURA2");
         while (query.next())
         {
-            srg.documentType=query.value(0).toString();
-            srg.vendorName=query.value(1).toString();
-            srg.invoiceNumber=query.value(2).toString();
-            srg.amount=query.value(3).toString();
-            srg.filePath=query.value(4).toString();
-            srg.saveDate=query.value(5).toString();
-            srg.invoiceDate=query.value(6).toString();
-            srg.userName=query.value(7).toString();
+            srg.id = query.value(0).toString();
+            srg.documentType = query.value(1).toString();
+            srg.vendorName = query.value(2).toString();
+            srg.invoiceNumber = query.value(3).toString();
+            srg.amount = query.value(4).toString();
+            srg.filePath = query.value(5).toString();
+            srg.saveDate = query.value(6).toString();
+            srg.invoiceDate = query.value(7).toString();
+            srg.userName = query.value(8).toString();
 
             emit vtKayitAlindi(srg);
         }

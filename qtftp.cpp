@@ -45,6 +45,7 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
         connect(ui->actionAdd_Vendor_Name, SIGNAL(triggered(bool)), this, SLOT(vendorNameEkle(bool)));
         connect(ui->actionAdd_Document_Type, SIGNAL(triggered(bool)), this, SLOT(documentTypeEkle(bool)));
+        connect(ui->tableWidget,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableWidgetTiklandi(QModelIndex)));
 
         //vtIslemiBitti = false;
         //ftpIslemiBitti = false;
@@ -53,10 +54,31 @@ QtFtp::QtFtp(QWidget *parent) :
         vtThreadCalistir();
         klasorAgaciOlustur();
 
-        ui->tableWidget->setColumnCount(8);
-        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
+        ui->tableWidget->setColumnCount(9);
+        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
         ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        ui->tableWidget->hideColumn(0);
+    }
+}
+
+/**
+ * @brief QtFtp::tableWidgetTiklandi
+ * tablewidget a çift tiklandigi zaman bu slot calisiyor.
+ * tılanan satırda dosya yolunu alıp açıyor
+ * @param mi
+ * tıklanan satırın data modeli
+ */
+void QtFtp::tableWidgetTiklandi(QModelIndex mi)
+{
+    QString dosyaYolu = ui->tableWidget->item(mi.row(),SUTUN_FILE_PATH)->text();
+    if(QFileInfo(dosyaYolu).exists())
+    {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(dosyaYolu));
+    }
+    else
+    {
+        QMessageBox::warning(this,"error","file not found\n"+dosyaYolu);
     }
 }
 
@@ -311,14 +333,15 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
 {
     ui->tableWidget->insertRow(ui->tableWidget->rowCount());
 
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0,new QTableWidgetItem(srg.documentType));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1,new QTableWidgetItem(srg.vendorName));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2,new QTableWidgetItem(srg.invoiceNumber));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,3,new QTableWidgetItem(srg.amount));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,4,new QTableWidgetItem(srg.filePath));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,5,new QTableWidgetItem(srg.saveDate));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,6,new QTableWidgetItem(srg.invoiceDate));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,7,new QTableWidgetItem(srg.userName));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_ID, new QTableWidgetItem(srg.id));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_DOCUMENT_TYPE, new QTableWidgetItem(srg.documentType));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_VENDOR_NAME, new QTableWidgetItem(srg.vendorName));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_INVOICE_NUMBER, new QTableWidgetItem(srg.invoiceNumber));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_TOTAL_AMOUNT, new QTableWidgetItem(srg.amount));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_FILE_PATH, new QTableWidgetItem(srg.filePath));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_SAVE_DATE ,new QTableWidgetItem(srg.saveDate));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_INVOICE_DATE, new QTableWidgetItem(srg.invoiceDate));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_USER_NAME, new QTableWidgetItem(srg.userName));
 }
 
 /*
