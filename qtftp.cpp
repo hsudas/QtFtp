@@ -306,32 +306,39 @@ void QtFtp::btnKaydetTiklandi(bool)
     {
         //dosya yolundan dosya ismini alıp dosyayı kopyalıyor
         QString dosyaIsmi = ui->txtFilePath->text().mid(ui->txtFilePath->text().lastIndexOf(QDir::separator())+1,ui->txtFilePath->text().size());
-        QStringList listeYeniDosya = dosyaIsmi.split(".");
-        QString yeniDosya = listeYeniDosya.at(0);
-        yeniDosya.append(QDateTime::currentDateTime().toString(Global::config->CNF_FILE_NAME_FORMAT));
-        yeniDosya.append(".");
-        yeniDosya.append(listeYeniDosya.at(1));
-        QFile::copy(ui->txtFilePath->text(), Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya);
+        if(QFileInfo(ui->txtFilePath->text()).isFile())
+        {
+            QStringList listeYeniDosya = dosyaIsmi.split(".");
+            QString yeniDosya = listeYeniDosya.at(0);
+            yeniDosya.append(QDateTime::currentDateTime().toString(Global::config->CNF_FILE_NAME_FORMAT));
+            yeniDosya.append(".");
+            yeniDosya.append(listeYeniDosya.at(1));
+            QFile::copy(ui->txtFilePath->text(), Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya);
 
-        //vt sorgusunu hazırlıyor
-        SqlSorgu sqlsorgu;
-        sqlsorgu.vendorName = ui->cbVendorName->currentText();
-        sqlsorgu.documentType = ui->cbDocumentType->currentText();
-        sqlsorgu.amount = ui->txtTotalAmount->text();
-        sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
-        QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
-        sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
-        sqlsorgu.filePath = Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya;
-        sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
-        sqlsorgu.userName = kullaniciAdi;
+            //vt sorgusunu hazırlıyor
+            SqlSorgu sqlsorgu;
+            sqlsorgu.vendorName = ui->cbVendorName->currentText();
+            sqlsorgu.documentType = ui->cbDocumentType->currentText();
+            sqlsorgu.amount = ui->txtTotalAmount->text();
+            sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
+            QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
+            sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
+            sqlsorgu.filePath = Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya;
+            sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
+            sqlsorgu.userName = kullaniciAdi;
 
-        tusEtkisiz(true);
-        //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
-        //emit dosyaKaydet_vt(sqlsorgu);
+            tusEtkisiz(true);
+            //emit dosyaKaydet_ftp(ui->listWidget->selectedItems().at(0)->text(), ui->txtIsim->text());
+            //emit dosyaKaydet_vt(sqlsorgu);
 
-        ui->tableWidget->setRowCount(0);//thread in nihayetinde baştan dolcagi icin tabloyu boşaltiyorum
-        vtThread->setISLEM(sqlsorgu, _ISLEM_KAYDET);
-        vtThread->start();
+            ui->tableWidget->setRowCount(0);//thread in nihayetinde baştan dolacagi icin tabloyu boşaltiyorum
+            vtThread->setISLEM(sqlsorgu, _ISLEM_KAYDET);
+            vtThread->start();
+        }
+        else
+        {
+            QMessageBox::warning(this, "error", "directory selected");
+        }
     }
 }
 
