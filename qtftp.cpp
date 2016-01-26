@@ -198,7 +198,7 @@ void QtFtp::klasorAgaciOlustur()
 void QtFtp::klasorAgacinaTiklandi(QModelIndex m)
 {
     QString url = dirModel->fileInfo(m).filePath();
-    ui->txtFilePath->setText(url);
+    ui->txtFilePath->setText(QDir::toNativeSeparators(url));
 }
 
 /*
@@ -233,7 +233,7 @@ void QtFtp::tusEtkisiz(bool b)
 void QtFtp::btnDosyaAcTiklandi(bool)
 {
     QString fileName = QFileDialog::getOpenFileName(this, "Open File", Global::config->CNF_KLASOR_AGACI_ROOT, "*.*");
-    ui->txtFilePath->setText(fileName);
+    ui->txtFilePath->setText(QDir::toNativeSeparators(fileName));
 }
 
 /*
@@ -321,7 +321,7 @@ void QtFtp::btnKaydetTiklandi(bool)
         sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
         QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
         sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
-        sqlsorgu.filePath = yeniDosya;
+        sqlsorgu.filePath = Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya;
         sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
         sqlsorgu.userName = kullaniciAdi;
 
