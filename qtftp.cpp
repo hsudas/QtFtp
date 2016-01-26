@@ -40,6 +40,7 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
         connect(ui->btnAra, SIGNAL(clicked(bool)), this, SLOT(btnAraTiklandi(bool)));
         connect(ui->btnTemizle, SIGNAL(clicked(bool)), this, SLOT(btnTemizleTiklandi(bool)));
+        connect(ui->btnDosyaAc, SIGNAL(clicked(bool)), this, SLOT(btnDosyaAcTiklandi(bool)));
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
@@ -170,6 +171,17 @@ void QtFtp::tusEtkisiz(bool b)
     ui->btnTemizle->setDisabled(b);
     ui->actionAdd_Document_Type->setDisabled(b);
     ui->actionAdd_Vendor_Name->setDisabled(b);
+}
+
+/**
+ * @brief QtFtp::btnDosyaAcTiklandi
+ * dosya ac butonunan tiklandigi zaman bu slot calisiyor.
+ * open file dialog aciyor
+ */
+void QtFtp::btnDosyaAcTiklandi(bool)
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", Global::config->CNF_KLASOR_AGACI_ROOT, "*.*");
+    ui->txtFilePath->setText(fileName);
 }
 
 /*

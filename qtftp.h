@@ -8,6 +8,7 @@
 #include <QFileSystemModel>
 #include <QDesktopServices>
 #include <QInputDialog>
+#include <QFileDialog>
 
 //#include "ftpthread.h"
 #include "vtthread.h"
@@ -55,6 +56,7 @@ public slots:
     void btnYenileTiklandi(bool b);
     void btnAraTiklandi(bool b);
     void btnTemizleTiklandi(bool b);
+    void btnDosyaAcTiklandi(bool);
     void takvimKapandi(QDate date);
     void btnKaydetTiklandi(bool b);
     //void faturaTuruListesiOlustu(QStringList sl);
