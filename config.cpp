@@ -54,4 +54,12 @@ void Config::ayarla(QStringList sl)
     {
         CNF_KLASOR_AGACI_ROOT = sl.at(1);
     }
+    else if(sl.at(0) == "ARCHIVE_FOLDER")
+    {
+        CNF_KLASOR_ARCHIVE = sl.at(1);
+    }
+    else if(sl.at(0) == "FILE_NAME_FORMAT")
+    {
+        CNF_FILE_NAME_FORMAT = sl.at(1);
+    }
 }

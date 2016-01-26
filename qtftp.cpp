@@ -234,12 +234,13 @@ void QtFtp::btnAraTiklandi(bool b)
     vtThread->start();
 }
 
-/*
- * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor. listeden seçim yapilmissa
- * dosyaKaydet_ftp(QString, QString) ve dosyaKaydet_vt(SqlSorgu) sinyalini veriyor.
- * secim yapilmamissa ve isim alani bossa hata veriyor
+/**
+ * @brief QtFtp::btnKaydetTiklandi
+ * btnKaydet e tiklayinca btnKaydetTiklandi(bool) slotu calisiyor.
+ * dosyayi arsiv klasorune kopyalar
+ * vt ye kayit ekler
  */
-void QtFtp::btnKaydetTiklandi(bool b)
+void QtFtp::btnKaydetTiklandi(bool)
 {
     //    if(ui->listWidget->selectedItems().isEmpty())
     //    {
@@ -247,10 +248,20 @@ void QtFtp::btnKaydetTiklandi(bool b)
     //    }
     if( ui->txtFilePath->text().isEmpty())
     {
-        QMessageBox::warning(this,"hata","isim alanı boş");
+        QMessageBox::warning(this, "error", "file name is empty");
     }
     else
     {
+        //dosya yolundan dosya ismini alıp dosyayı kopyalıyor
+        QString dosyaIsmi = ui->txtFilePath->text().mid(ui->txtFilePath->text().lastIndexOf(QDir::separator())+1,ui->txtFilePath->text().size());
+        QStringList listeYeniDosya = dosyaIsmi.split(".");
+        QString yeniDosya = listeYeniDosya.at(0);
+        yeniDosya.append(QDateTime::currentDateTime().toString(Global::config->CNF_FILE_NAME_FORMAT));
+        yeniDosya.append(".");
+        yeniDosya.append(listeYeniDosya.at(1));
+        QFile::copy(ui->txtFilePath->text(), Global::config->CNF_KLASOR_ARCHIVE+QDir::separator()+yeniDosya);
+
+        //vt sorgusunu hazırlıyor
         SqlSorgu sqlsorgu;
         sqlsorgu.vendorName = ui->cbVendorName->currentText();
         sqlsorgu.documentType = ui->cbDocumentType->currentText();
@@ -258,7 +269,7 @@ void QtFtp::btnKaydetTiklandi(bool b)
         sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
         QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
         sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
-        sqlsorgu.filePath = ui->txtFilePath->text();
+        sqlsorgu.filePath = yeniDosya;
         sqlsorgu.saveDate = QDateTime::currentDateTime().toString("MM/dd/yyyy HH:mm:ss");
         sqlsorgu.userName = kullaniciAdi;
 

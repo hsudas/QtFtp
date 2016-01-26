@@ -45,6 +45,8 @@ public:
     QString CNF_VT_DATABASE_NAME;
     QString CNF_VT_WIN_DRIVER;
     QString CNF_KLASOR_AGACI_ROOT;
+    QString CNF_KLASOR_ARCHIVE;
+    QString CNF_FILE_NAME_FORMAT;
 
     bool dosyaVar;
     QString ayarDosyasiYolu;

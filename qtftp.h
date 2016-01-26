@@ -58,7 +58,7 @@ public slots:
     void btnTemizleTiklandi(bool b);
     void btnDosyaAcTiklandi(bool);
     void takvimKapandi(QDate date);
-    void btnKaydetTiklandi(bool b);
+    void btnKaydetTiklandi(bool);
     //void faturaTuruListesiOlustu(QStringList sl);
     void vtKayitAlindi(SqlSorgu srg);
     void islemBitti_vt(int);
