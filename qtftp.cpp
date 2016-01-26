@@ -17,6 +17,12 @@ QtFtp::QtFtp(QWidget *parent) :
     }
     else
     {
+        //ayarlarda eksiklik varsa uygulamadan çıksın
+        if(!ayarlariKontrolEt())
+        {
+            exit(0);
+        }
+
         //kullanici adini soran dialog
         QInputDialog inputDialog;
         inputDialog.setOptions(QInputDialog::NoButtons);
@@ -61,6 +67,52 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         ui->tableWidget->hideColumn(0);
     }
+}
+
+/**
+ * @brief QtFtp::ayarlariKontrolEt
+ * config dosyasından okunan değişkenleri kontrol eder. boş olan varsa ayar config dosyasında yoktur
+ * hata verip uygulamadan çıkar
+ */
+bool QtFtp::ayarlariKontrolEt()
+{
+    if(Global::config->CNF_VT_USERNAME.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no VT_USERNAME option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_VT_PASSWORD.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no VT_PASSWORD option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_VT_IP.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no VT_IP option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_VT_DATABASE_NAME.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no VT_DATABASE_NAME option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_KLASOR_AGACI_ROOT.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no SHARED_FOLDER option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_KLASOR_ARCHIVE.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no ARCHIVE_FOLDER option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_FILE_NAME_FORMAT.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no FILE_NAME_FORMAT option in config file");
+        return false;
+    }
+
+    return true;
 }
 
 /**

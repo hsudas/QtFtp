@@ -32,6 +32,7 @@ public:
     void klasorAgaciOlustur();
     //void ftpThreadCalistir();
     void tusEtkisiz(bool);
+    bool ayarlariKontrolEt();
 
 private:
     Ui::QtFtp *ui;
