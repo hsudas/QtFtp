@@ -1,7 +1,8 @@
 #include "takvim.h"
 
-Takvim::Takvim(QDate date)
+Takvim::Takvim(QDate date, QPushButton *cagiranBtn)
 {
+    this->cagiranBtn = cagiranBtn;
     setSelectedDate(date);
     connect(this,SIGNAL(activated(QDate)),this, SLOT(secimYapildi(QDate)));
 }
@@ -17,13 +18,19 @@ void Takvim::secimYapildi(QDate date)
 }
 
 /*
- * takvim widget i kapandigi zaman closeEvent(QCloseEvent)
- * metodu calisiyor. closeEvent(QCloseEvent) takvimKapandi(QDate)
+ * takvim widget i kapandigi zaman closeEvent()
+ * metodu calisiyor. closeEvent(QCloseEvent) takvimKapandi()
  * sinyalini veriyor ve takvim nesnesini siliyor
  */
-void Takvim::closeEvent (QCloseEvent *event)
+/**
+ * @brief Takvim::closeEvent
+ * takvim widget i kapandigi zaman closeEvent()
+ * metodu calisiyor. closeEvent(QCloseEvent) takvimKapandi()
+ * sinyalini veriyor ve takvim nesnesini siliyor
+ */
+void Takvim::closeEvent (QCloseEvent *)
 {
-    emit takvimKapandi(selectedDate());
+    emit takvimKapandi(selectedDate(), cagiranBtn);
     delete this;
 }
 

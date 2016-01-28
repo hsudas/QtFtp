@@ -42,6 +42,7 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
         ui->btnTarih2->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
+        connect(ui->btnTarih2, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
         connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
         connect(ui->btnAra, SIGNAL(clicked(bool)), this, SLOT(btnAraTiklandi(bool)));
@@ -342,26 +343,29 @@ void QtFtp::btnKaydetTiklandi(bool)
     }
 }
 
-/*
- * takvim widget i kapandigi zaman takvimKapandi(QDate) slotu
- * calisiyor. secilen tarihi takvim butonuna yaziyor
+/**
+ * @brief QtFtp::takvimKapandi : takvim widget i kapandigi zaman takvimKapandi slotu calisiyor
+ * secilne tarihi cagiran butona yaziyor
+ * @param date : secilen tarih
+ * @param btn : takvim widget'ini acan buton
  */
-void QtFtp::takvimKapandi(QDate date)
+void QtFtp::takvimKapandi(QDate date, QPushButton *btn)
 {
-    ui->btnTarih->setDisabled(false);
-    ui->btnTarih->setText(date.toString(TARIH_FORMAT));
+    btn->setDisabled(false);
+    btn->setText(date.toString(TARIH_FORMAT));
 }
 
-/*
- * takvim butonuna tiklandigi zaman takvim nesnesi olusturup baslatir
+/**
+ * @brief QtFtp::btnTarihTiklandi : takvim butonuna tiklandigi zaman takvim nesnesi olusturup baslatir
  */
-void QtFtp::btnTarihTiklandi(bool b)
+void QtFtp::btnTarihTiklandi(bool)
 {
-    Takvim *takvim = new Takvim(QDate::fromString(ui->btnTarih->text(), TARIH_FORMAT));
-    connect(takvim,SIGNAL(takvimKapandi(QDate)),this,SLOT(takvimKapandi(QDate)));
+    QPushButton *cagiranBtnTarih = qobject_cast<QPushButton*>(this->sender());
+    Takvim *takvim = new Takvim(QDate::fromString(ui->btnTarih->text(), TARIH_FORMAT), cagiranBtnTarih);
+    connect(takvim,SIGNAL(takvimKapandi(QDate, QPushButton *)),this,SLOT(takvimKapandi(QDate, QPushButton *)));
     takvim->show();
 
-    ui->btnTarih->setDisabled(true);
+    cagiranBtnTarih->setDisabled(true);
 }
 
 /*

@@ -53,12 +53,12 @@ public slots:
     void documentTypeEkle(bool);
     void vendorNameAlindi(QStringList);
     void documentTypeAlindi(QStringList);
-    void btnTarihTiklandi(bool b);
+    void btnTarihTiklandi(bool);
     void btnYenileTiklandi(bool b);
     void btnAraTiklandi(bool b);
     void btnTemizleTiklandi(bool b);
     void btnDosyaAcTiklandi(bool);
-    void takvimKapandi(QDate date);
+    void takvimKapandi(QDate date, QPushButton *btn);
     void btnKaydetTiklandi(bool);
     //void faturaTuruListesiOlustu(QStringList sl);
     void vtKayitAlindi(SqlSorgu srg);
