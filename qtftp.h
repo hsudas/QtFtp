@@ -33,6 +33,7 @@ public:
     //void ftpThreadCalistir();
     void tusEtkisiz(bool);
     bool ayarlariKontrolEt();
+    void alanlariTemizle();
 
 private:
     Ui::QtFtp *ui;

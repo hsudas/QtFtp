@@ -445,23 +445,31 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
  * vt threadi işini bitirdiği zaman islemBitti(int) sinyalini veriyor. islemBitti(int) sinyali
  * islemBitti_vt(int) slotunu çağırıyor
  */
+/**
+ * @brief QtFtp::islemBitti_vt : vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor.
+ * islemBitti() sinyali islemBitti_vt() slotunu çağırıyor. islem turune gore ekrana
+ * messageBox cikariyor
+ * @param islemTuru : biten islemin turu
+ */
 void QtFtp::islemBitti_vt(int islemTuru)
 {
     tusEtkisiz(false);
 
-    switch (islemTuru) {
+    switch (islemTuru)
+    {
     case _ISLEM_KAYDET:
-        QMessageBox::information(this,"bilgi","saved");
+        QMessageBox::information(this,"info","saved");
+        alanlariTemizle();
         break;
     case _ISLEM_ARAMA:
         break;
     case _ISLEM_YENILE:
         break;
     case _ISLEM_EKLE_VENDOR_NAME:
-        QMessageBox::information(this,"bilgi","vendor name added");
+        QMessageBox::information(this,"info","vendor name added");
         break;
     case _ISLEM_EKLE_DOCUMENT_TYPE:
-        QMessageBox::information(this,"bilgi","document type added");
+        QMessageBox::information(this,"info","document type added");
         break;
     default:
         break;
@@ -469,6 +477,20 @@ void QtFtp::islemBitti_vt(int islemTuru)
 
     //vtIslemiBitti = true;
     //islemBitti();
+}
+
+/**
+ * @brief QtFtp::alanlariTemizle : kaydet butonuna tıklandıktan sonra alanlari temizler
+ */
+void QtFtp::alanlariTemizle()
+{
+    ui->txtFilePath->clear();
+    ui->cbDocumentType->setCurrentIndex(0);
+    ui->cbVendorName->setCurrentIndex(0);
+    ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
+    ui->btnTarih2->setText(QDate::currentDate().toString(TARIH_FORMAT));
+    ui->txtInvoiceNumber->clear();
+    ui->txtTotalAmount->clear();
 }
 
 /*
