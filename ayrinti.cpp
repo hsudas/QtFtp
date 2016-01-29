@@ -11,11 +11,28 @@ Ayrinti::Ayrinti(VtThread *vt, QWidget *parent) :
     connect(ui->btnInvoiceDate, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
     connect(ui->btnKaydet, SIGNAL(clicked(bool)), this, SLOT(btnKaydetTiklandi(bool)));
     connect(ui->btnIptal, SIGNAL(clicked(bool)), this, SLOT(btnIptalTiklandi(bool)));
+    connect(ui->btnSil, SIGNAL(clicked(bool)), this, SLOT(btnSilTiklandi(bool)));
 }
 
 Ayrinti::~Ayrinti()
 {
     delete ui;
+}
+
+/**
+ * @brief Ayrinti::btnSilTiklandi : sil butonuna tiklandiginda buraya geliyor.
+ * vt den kaydi siler
+ */
+void Ayrinti::btnSilTiklandi(bool)
+{
+    if(!QMessageBox::question(this, "","record will be deleted ?","OK","Cancel"))
+    {
+        vt->setISLEM(id, _ISLEM_SIL);
+        vt->start();
+
+        close();
+        delete this;
+    }
 }
 
 /**

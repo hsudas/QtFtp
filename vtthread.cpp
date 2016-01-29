@@ -66,8 +66,28 @@ void VtThread::run()
         documentTypeKaydet();
         break;
 
+    case _ISLEM_SIL:
+        kayitSil();
+        break;
     default:
         break;
+    }
+}
+
+void VtThread::kayitSil()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        query.exec(QString("DELETE FROM FATURA2 WHERE ID=%1;").arg(kaydedilecekVeri));
+
+         db.close();
+         emit islemBitti(_ISLEM_SIL);
     }
 }
 

@@ -2,6 +2,7 @@
 #define AYRINTI_H
 
 #include <QDialog>
+#include <QMessageBox>
 
 #include "config.h"
 #include "takvim.h"
@@ -34,6 +35,7 @@ public slots:
     void btnTarihTiklandi(bool);
     void btnKaydetTiklandi(bool);
     void btnIptalTiklandi(bool);
+    void btnSilTiklandi(bool);
     void takvimKapandi(QDate, QPushButton *);
 
 private:

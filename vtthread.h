@@ -51,6 +51,7 @@ public:
     void documentTypeEkle();
     void vendorNameKaydet();
     void documentTypeKaydet();
+    void kayitSil();
 
 signals:
     //void faturaTuruListesiOlustu(QStringList);

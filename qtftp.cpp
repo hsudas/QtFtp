@@ -567,6 +567,10 @@ void QtFtp::islemBitti_vt(int islemTuru)
     case _ISLEM_DOCUMENT_TYPE:
         QMessageBox::information(this,"info","document types saved");
         break;
+    case _ISLEM_SIL:
+        QMessageBox::information(this,"info","record deleted");
+        vtYenile();
+        break;
     default:
         break;
     }
