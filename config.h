@@ -11,15 +11,16 @@
 #define _ISLEM_ARAMA_SONUCU  1
 
 //vt işlem turleri
-#define _ISLEM_KAYDET       3
-#define _ISLEM_YENILE       4
-#define _ISLEM_ARAMA        5
-#define _ISLEM_BASLANGIC    6
-#define _ISLEM_GUNCELLE     7
-
-//insert islemleri
-#define _ISLEM_EKLE_VENDOR_NAME     8
-#define _ISLEM_EKLE_DOCUMENT_TYPE   9
+#define _ISLEM_KAYDET               3
+#define _ISLEM_YENILE               4
+#define _ISLEM_ARAMA                5
+#define _ISLEM_BASLANGIC            6
+#define _ISLEM_GUNCELLE             7
+#define _ISLEM_VENDOR_NAME          8
+#define _ISLEM_DOCUMENT_TYPE        9
+#define _ISLEM_EKLE_VENDOR_NAME     10
+#define _ISLEM_EKLE_DOCUMENT_TYPE   11
+#define _ISLEM_SIL                  12
 
 //tableWidget sutunlari
 #define SUTUN_AYRINTI           0

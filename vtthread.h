@@ -34,6 +34,7 @@ private:
     QSqlDatabase db;
     SqlSorgu sqlsrg;
     QString kaydedilecekVeri;
+    QStringList kaydedilecekVeriler;
     int ISLEM;
 
 public:
@@ -41,12 +42,15 @@ public:
     ~VtThread();
     void run();
     void setISLEM(int i){ISLEM = i;}
+    void setISLEM(QStringList veri, int i){kaydedilecekVeriler = veri;ISLEM = i;}
     void setISLEM(QString veri, int i){kaydedilecekVeri = veri;ISLEM = i;}
     void setISLEM(SqlSorgu srg, int i){sqlsrg = srg;ISLEM = i;}
     void documentTypeGetir();
     void vendorNameGetir();
     void vendorNameEkle();
     void documentTypeEkle();
+    void vendorNameKaydet();
+    void documentTypeKaydet();
 
 signals:
     //void faturaTuruListesiOlustu(QStringList);

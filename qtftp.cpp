@@ -47,6 +47,8 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->btnYenile, SIGNAL(clicked(bool)), this, SLOT(btnYenileTiklandi(bool)));
         connect(ui->btnAra, SIGNAL(clicked(bool)), this, SLOT(btnAraTiklandi(bool)));
         connect(ui->btnTemizle, SIGNAL(clicked(bool)), this, SLOT(btnTemizleTiklandi(bool)));
+        connect(ui->btnVendorName, SIGNAL(clicked(bool)), this, SLOT(btnVendorNameTiklandi(bool)));
+        connect(ui->btnDocumentType, SIGNAL(clicked(bool)), this, SLOT(btnDocumentTypeTiklandi(bool)));
         connect(ui->btnDosyaAc, SIGNAL(clicked(bool)), this, SLOT(btnDosyaAcTiklandi(bool)));
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
@@ -63,11 +65,48 @@ QtFtp::QtFtp(QWidget *parent) :
         klasorAgaciOlustur();
 
         ui->tableWidget->setColumnCount(SUTUN_TOPLAM);
-        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"--"<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
+        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<""<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
         ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        //ui->tableWidget->hideColumn(1);
+        ui->tableWidget->hideColumn(1);
+        ui->tableWidget->setColumnWidth(0,30);
     }
+}
+
+/**
+ * @brief QtFtp::btnVendorNameTiklandi : vendorName butonuna tiklayinca burasi calisiyor
+ * vendorName combobox ından verileri okuyup ayrinti2 penceresini acar
+ */
+void QtFtp::btnVendorNameTiklandi(bool)
+{
+    Ayrinti2 *ayrinti2 = new Ayrinti2(vtThread);
+
+    QStringList liste;
+    for(int i = 1; i < ui->cbVendorName->count(); i++)
+    {
+        liste.append(ui->cbVendorName->itemText(i));
+    }
+    ayrinti2->doldur(liste);
+    ayrinti2->setISLEM(_ISLEM_VENDOR_NAME);
+    ayrinti2->show();
+}
+
+/**
+ * @brief QtFtp::btnDocumentTypeTiklandi : documentType butonuna tiklayinca burasi calisiyor
+ * documentType combobox ından verileri okuyup ayrinti2 penceresini acar
+ */
+void QtFtp::btnDocumentTypeTiklandi(bool)
+{
+    Ayrinti2 *ayrinti2 = new Ayrinti2(vtThread);
+
+    QStringList liste;
+    for(int i = 1; i < ui->cbDocumentType->count(); i++)
+    {
+        liste.append(ui->cbDocumentType->itemText(i));
+    }
+    ayrinti2->doldur(liste);
+    ayrinti2->setISLEM(_ISLEM_DOCUMENT_TYPE);
+    ayrinti2->show();
 }
 
 /**
@@ -404,6 +443,7 @@ void QtFtp::vtThreadCalistir()
 void QtFtp::vendorNameAlindi(QStringList sl)
 {
     ui->cbVendorName->clear();
+    ui->cbVendorName->addItem("");
     ui->cbVendorName->addItems(sl);
 }
 
@@ -416,6 +456,7 @@ void QtFtp::vendorNameAlindi(QStringList sl)
 void QtFtp::documentTypeAlindi(QStringList sl)
 {
     ui->cbDocumentType->clear();
+    ui->cbDocumentType->addItem("");
     ui->cbDocumentType->addItems(sl);
 }
 
@@ -431,6 +472,7 @@ void QtFtp::documentTypeAlindi(QStringList sl)
 void QtFtp::vtKayitAlindi(SqlSorgu srg)
 {
     QPushButton *btnAyrinti = new QPushButton();
+    btnAyrinti->setIcon(QIcon(":/resim/disli.png"));
     connect(btnAyrinti, SIGNAL(clicked()), signalMapper, SLOT(map()));
     signalMapper->setMapping(btnAyrinti, ui->tableWidget->rowCount());
 
@@ -518,7 +560,12 @@ void QtFtp::islemBitti_vt(int islemTuru)
         break;
     case _ISLEM_BASLANGIC:
         connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(btnAyrintiTiklandi(int)));
-
+        break;
+    case _ISLEM_VENDOR_NAME:
+        QMessageBox::information(this,"info","vendor names saved");
+        break;
+    case _ISLEM_DOCUMENT_TYPE:
+        QMessageBox::information(this,"info","document types saved");
         break;
     default:
         break;

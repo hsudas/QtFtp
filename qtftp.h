@@ -15,6 +15,7 @@
 #include "takvim.h"
 #include "global.h"
 #include "ayrinti.h"
+#include "ayrinti2.h"
 
 namespace Ui
 {
@@ -64,6 +65,8 @@ public slots:
     void btnTemizleTiklandi(bool b);
     void btnDosyaAcTiklandi(bool);
     void btnAyrintiTiklandi(int);
+    void btnDocumentTypeTiklandi(bool);
+    void btnVendorNameTiklandi(bool);
     void takvimKapandi(QDate date, QPushButton *btn);
     void btnKaydetTiklandi(bool);
     //void faturaTuruListesiOlustu(QStringList sl);

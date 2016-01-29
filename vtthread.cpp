@@ -58,8 +58,82 @@ void VtThread::run()
         kayitGuncelle();
         break;
 
+    case _ISLEM_VENDOR_NAME:
+        vendorNameKaydet();
+        break;
+
+    case _ISLEM_DOCUMENT_TYPE:
+        documentTypeKaydet();
+        break;
+
     default:
         break;
+    }
+}
+
+/**
+ * @brief VtThread::documentTypeKaydet : ayrinti2 penceresinde kaydet butonuna tiklayinca burasi calisir
+ * documentType verilerini vt ye kaydeder
+ */
+void VtThread::documentTypeKaydet()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        query.exec("DELETE FROM FATURA_DOCUMENT_TYPE;");
+        for(int i=0;i<kaydedilecekVeriler.size();i++)
+        {
+            bool b = query.exec(
+                        QString("INSERT INTO FATURA_DOCUMENT_TYPE (DOCUMENT_TYPE) VALUES('%1');")
+                        .arg(kaydedilecekVeriler.at(i)));
+            if(!b)
+            {
+                qDebug() << "vt hatasi 1"<<db.lastError();
+            }
+        }
+
+        db.close();
+
+        emit documentTypeAlindi(kaydedilecekVeriler);
+        emit islemBitti(_ISLEM_DOCUMENT_TYPE);
+    }
+}
+
+/**
+ * @brief VtThread::vendorNameKaydet : ayrinti2 penceresinde kaydet butonuna tiklayinca burasi calisir
+ * vendorName verilerini vt ye kaydeder
+ */
+void VtThread::vendorNameKaydet()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        query.exec("DELETE FROM FATURA_VENDOR_NAME;");
+        for(int i=0;i<kaydedilecekVeriler.size();i++)
+        {
+            bool b = query.exec(
+                        QString("INSERT INTO FATURA_VENDOR_NAME (VENDOR_NAME) VALUES('%1');")
+                        .arg(kaydedilecekVeriler.at(i)));
+            if(!b)
+            {
+                qDebug() << "vt hatasi 1"<<db.lastError();
+            }
+        }
+
+        db.close();
+
+        emit vendorNameAlindi(kaydedilecekVeriler);
+        emit islemBitti(_ISLEM_VENDOR_NAME);
     }
 }
 
@@ -77,13 +151,13 @@ void VtThread::kayitGuncelle()
         QSqlQuery query;
         query.setForwardOnly(true);
         bool b = query.exec(QString("UPDATE FATURA2 SET DOCUMENT_TYPE='%1', VENDOR_NAME='%2', INVOICE_NUMBER='%3', TOTAL_AMOUNT='%4', FILE_PATH='%5', INVOICE_DATE='%6' WHERE ID='%7'")
-                   .arg(sqlsrg.documentType)
-                   .arg(sqlsrg.vendorName)
-                   .arg(sqlsrg.invoiceNumber)
-                   .arg(sqlsrg.amount)
-                   .arg(sqlsrg.filePath)
-                   .arg(sqlsrg.invoiceDate)
-                   .arg(sqlsrg.id));
+                            .arg(sqlsrg.documentType)
+                            .arg(sqlsrg.vendorName)
+                            .arg(sqlsrg.invoiceNumber)
+                            .arg(sqlsrg.amount)
+                            .arg(sqlsrg.filePath)
+                            .arg(sqlsrg.invoiceDate)
+                            .arg(sqlsrg.id));
 
         if(!b)
         {
@@ -167,7 +241,7 @@ void VtThread::documentTypeGetir()
     else
     {
         QStringList listeDocumentType;
-        listeDocumentType.append("");
+        //listeDocumentType.append("");
         QSqlQuery query;
         query.setForwardOnly(true);
         query.exec("SELECT DOCUMENT_TYPE FROM FATURA_DOCUMENT_TYPE");
@@ -195,7 +269,7 @@ void VtThread::vendorNameGetir()
     else
     {
         QStringList listeVendorName;
-        listeVendorName.append("");
+        //listeVendorName.append("");
         QSqlQuery query;
         query.setForwardOnly(true);
         query.exec("SELECT VENDOR_NAME FROM FATURA_VENDOR_NAME");

@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     vtthread.cpp \
     config.cpp \
     global.cpp \
-    ayrinti.cpp
+    ayrinti.cpp \
+    ayrinti2.cpp
 
 HEADERS  += qtftp.h \
     ftpthread.h \
@@ -29,7 +30,12 @@ HEADERS  += qtftp.h \
     vtthread.h \
     config.h \
     global.h \
-    ayrinti.h
+    ayrinti.h \
+    ayrinti2.h
 
 FORMS    += qtftp.ui \
-    ayrinti.ui
+    ayrinti.ui \
+    ayrinti2.ui
+
+RESOURCES += \
+    res.qrc
