@@ -20,13 +20,16 @@ SOURCES += main.cpp\
     takvim.cpp \
     vtthread.cpp \
     config.cpp \
-    global.cpp
+    global.cpp \
+    ayrinti.cpp
 
 HEADERS  += qtftp.h \
     ftpthread.h \
     takvim.h \
     vtthread.h \
     config.h \
-    global.h
+    global.h \
+    ayrinti.h
 
-FORMS    += qtftp.ui
+FORMS    += qtftp.ui \
+    ayrinti.ui

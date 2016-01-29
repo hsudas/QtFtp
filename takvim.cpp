@@ -17,11 +17,6 @@ void Takvim::secimYapildi(QDate date)
     close();
 }
 
-/*
- * takvim widget i kapandigi zaman closeEvent()
- * metodu calisiyor. closeEvent(QCloseEvent) takvimKapandi()
- * sinyalini veriyor ve takvim nesnesini siliyor
- */
 /**
  * @brief Takvim::closeEvent
  * takvim widget i kapandigi zaman closeEvent()

@@ -57,8 +57,9 @@ signals:
 
 public slots:
     void dosyaKaydet();
-    void tumKayitlariGetir();
+    void tumKayitlariGetir(int islem);
     void aramaSonuclariniGetir();
+    void kayitGuncelle();
 };
 
 

@@ -62,11 +62,11 @@ QtFtp::QtFtp(QWidget *parent) :
         vtThreadCalistir();
         klasorAgaciOlustur();
 
-        ui->tableWidget->setColumnCount(9);
-        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
+        ui->tableWidget->setColumnCount(SUTUN_TOPLAM);
+        ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"--"<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
         ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableWidget->hideColumn(0);
+        //ui->tableWidget->hideColumn(1);
     }
 }
 
@@ -254,7 +254,12 @@ void QtFtp::btnTemizleTiklandi(bool b)
  * btnYenile ye tiklandigi zaman btnYenileTiklandi(bool) slotu calisiyor.
  * vt thread i baslatiyor
  */
-void QtFtp::btnYenileTiklandi(bool b)
+void QtFtp::btnYenileTiklandi(bool)
+{
+    vtYenile();
+}
+
+void QtFtp::vtYenile()
 {
     ui->tableWidget->setRowCount(0);
     tusEtkisiz(true);
@@ -373,6 +378,9 @@ void QtFtp::btnTarihTiklandi(bool)
  */
 void QtFtp::vtThreadCalistir()
 {
+    signalMapper = new QSignalMapper(this);
+
+
     vtThread = new VtThread();
     vtThread->setISLEM(_ISLEM_BASLANGIC);
 
@@ -415,10 +423,19 @@ void QtFtp::documentTypeAlindi(QStringList sl)
  * vtKayitAlindi(SqlSorgu) sinyali vtKayitAlindi(SqlSorgu) slotunu cagiriyor
  * vt den alinan veriyi tablewidget a yaziyor
  */
+/**
+ * @brief QtFtp::vtKayitAlindi : vtKayitAlindi() sinyali vtKayitAlindi() slotunu cagiriyor
+ * vt den alinan veriyi tablewidget a yaziyor
+ * @param srg : vt den gelen veriler
+ */
 void QtFtp::vtKayitAlindi(SqlSorgu srg)
 {
-    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    QPushButton *btnAyrinti = new QPushButton();
+    connect(btnAyrinti, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    signalMapper->setMapping(btnAyrinti, ui->tableWidget->rowCount());
 
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    ui->tableWidget->setCellWidget(ui->tableWidget->rowCount()-1, SUTUN_AYRINTI, btnAyrinti);
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_ID, new QTableWidgetItem(srg.id));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_DOCUMENT_TYPE, new QTableWidgetItem(srg.documentType));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_VENDOR_NAME, new QTableWidgetItem(srg.vendorName));
@@ -428,6 +445,34 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_SAVE_DATE ,new QTableWidgetItem(srg.saveDate));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_INVOICE_DATE, new QTableWidgetItem(srg.invoiceDate));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, SUTUN_USER_NAME, new QTableWidgetItem(srg.userName));
+}
+
+void QtFtp::btnAyrintiTiklandi(int satir)
+{
+    Ayrinti *ayrinti = new Ayrinti(vtThread);
+    ayrinti->setID(ui->tableWidget->item(satir,SUTUN_ID)->text());
+    ayrinti->setdocumentType(ui->tableWidget->item(satir,SUTUN_DOCUMENT_TYPE)->text());
+    ayrinti->setvendorName(ui->tableWidget->item(satir,SUTUN_VENDOR_NAME)->text());
+    ayrinti->setinvoiceNumber(ui->tableWidget->item(satir,SUTUN_INVOICE_NUMBER)->text());
+    ayrinti->setamount(ui->tableWidget->item(satir,SUTUN_TOTAL_AMOUNT)->text());
+    ayrinti->setfilePath(ui->tableWidget->item(satir,SUTUN_FILE_PATH)->text());
+    ayrinti->setinvoiceDate(ui->tableWidget->item(satir,SUTUN_INVOICE_DATE)->text());
+
+    QStringList liste;
+    for(int i = 0; i < ui->cbDocumentType->count(); i++)
+    {
+        liste.append(ui->cbDocumentType->itemText(i));
+    }
+    ayrinti->setlistDocumentType(liste);
+    liste.clear();
+    for(int i = 0; i < ui->cbVendorName->count(); i++)
+    {
+        liste.append(ui->cbVendorName->itemText(i));
+    }
+    ayrinti->setlistVendorName(liste);
+
+    ayrinti->doldur();
+    ayrinti->show();
 }
 
 /*
@@ -441,10 +486,6 @@ void QtFtp::vtKayitAlindi(SqlSorgu srg)
 //    ui->cbDocumentType->addItems(sl);
 //}
 
-/*
- * vt threadi işini bitirdiği zaman islemBitti(int) sinyalini veriyor. islemBitti(int) sinyali
- * islemBitti_vt(int) slotunu çağırıyor
- */
 /**
  * @brief QtFtp::islemBitti_vt : vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor.
  * islemBitti() sinyali islemBitti_vt() slotunu çağırıyor. islem turune gore ekrana
@@ -470,6 +511,14 @@ void QtFtp::islemBitti_vt(int islemTuru)
         break;
     case _ISLEM_EKLE_DOCUMENT_TYPE:
         QMessageBox::information(this,"info","document type added");
+        break;
+    case _ISLEM_GUNCELLE:
+        QMessageBox::information(this,"info","recored updated");
+        vtYenile();
+        break;
+    case _ISLEM_BASLANGIC:
+        connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(btnAyrintiTiklandi(int)));
+
         break;
     default:
         break;

@@ -14,6 +14,7 @@
 #include "vtthread.h"
 #include "takvim.h"
 #include "global.h"
+#include "ayrinti.h"
 
 namespace Ui
 {
@@ -34,6 +35,7 @@ public:
     void tusEtkisiz(bool);
     bool ayarlariKontrolEt();
     void alanlariTemizle();
+    void vtYenile();
 
 private:
     Ui::QtFtp *ui;
@@ -43,10 +45,12 @@ private:
     //FtpThread *ftpThread;
     //bool ftpIslemiBitti;
     QString kullaniciAdi;
+    QSignalMapper *signalMapper;
 
 signals:
     //void dosyaKaydet_ftp(QString dosyaIsmi, QString yeniIsim);
     //void dosyaKaydet_vt(SqlSorgu s);
+    void clicked(const int &text);
 
 public slots:
     void tableWidgetTiklandi(QModelIndex);
@@ -55,10 +59,11 @@ public slots:
     void vendorNameAlindi(QStringList);
     void documentTypeAlindi(QStringList);
     void btnTarihTiklandi(bool);
-    void btnYenileTiklandi(bool b);
+    void btnYenileTiklandi(bool);
     void btnAraTiklandi(bool b);
     void btnTemizleTiklandi(bool b);
     void btnDosyaAcTiklandi(bool);
+    void btnAyrintiTiklandi(int);
     void takvimKapandi(QDate date, QPushButton *btn);
     void btnKaydetTiklandi(bool);
     //void faturaTuruListesiOlustu(QStringList sl);

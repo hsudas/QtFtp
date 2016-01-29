@@ -29,7 +29,7 @@ void VtThread::run()
     switch (ISLEM)
     {
     case _ISLEM_TUM_KAYITLAR:
-        tumKayitlariGetir();
+        tumKayitlariGetir(_ISLEM_TUM_KAYITLAR);
         break;
 
     case _ISLEM_ARAMA_SONUCU:
@@ -43,7 +43,7 @@ void VtThread::run()
     case _ISLEM_BASLANGIC:
         documentTypeGetir();
         vendorNameGetir();
-        tumKayitlariGetir();
+        tumKayitlariGetir(_ISLEM_BASLANGIC);
         break;
 
     case _ISLEM_EKLE_VENDOR_NAME:
@@ -54,9 +54,46 @@ void VtThread::run()
         documentTypeEkle();
         break;
 
+    case _ISLEM_GUNCELLE:
+        kayitGuncelle();
+        break;
+
     default:
         break;
     }
+}
+
+/**
+ * @brief VtThread::kayitGuncelle : ayrinti ekraninda guncelle butonuna tiklanildigi zaman kayit gunceller
+ */
+void VtThread::kayitGuncelle()
+{
+    if (!db.open())
+    {
+        qDebug() << "vt hatasi"<<db.lastError();
+    }
+    else
+    {
+        QSqlQuery query;
+        query.setForwardOnly(true);
+        bool b = query.exec(QString("UPDATE FATURA2 SET DOCUMENT_TYPE='%1', VENDOR_NAME='%2', INVOICE_NUMBER='%3', TOTAL_AMOUNT='%4', FILE_PATH='%5', INVOICE_DATE='%6' WHERE ID='%7'")
+                   .arg(sqlsrg.documentType)
+                   .arg(sqlsrg.vendorName)
+                   .arg(sqlsrg.invoiceNumber)
+                   .arg(sqlsrg.amount)
+                   .arg(sqlsrg.filePath)
+                   .arg(sqlsrg.invoiceDate)
+                   .arg(sqlsrg.id));
+
+        if(!b)
+        {
+            qDebug() << "vt hatasi 1"<<db.lastError();
+        }
+
+        db.close();
+    }
+
+    emit islemBitti(_ISLEM_GUNCELLE);
 }
 
 /**
@@ -173,10 +210,11 @@ void VtThread::vendorNameGetir()
     }
 }
 
-/*
- * vt deki tum kayitlari getirir
+/**
+ * @brief VtThread::tumKayitlariGetir : vt deki tum kayitlari getirir
+ * @param islem : islem turune göre kullaniciya mesaj verilecek
  */
-void VtThread::tumKayitlariGetir()
+void VtThread::tumKayitlariGetir(int islem)
 {
     if (!db.open())
     {
@@ -221,7 +259,21 @@ void VtThread::tumKayitlariGetir()
         emit faturaTuruListesiOlustu(listeFaturaTuru);*/
     }
 
-    emit islemBitti(_ISLEM_YENILE);
+    switch (islem)
+    {
+    case _ISLEM_BASLANGIC:
+        emit islemBitti(_ISLEM_BASLANGIC);
+        break;
+    case _ISLEM_TUM_KAYITLAR:
+        emit islemBitti(_ISLEM_YENILE);
+        break;
+    case _ISLEM_KAYDET:
+        emit islemBitti(_ISLEM_KAYDET);
+        break;
+    default:
+        emit islemBitti(_ISLEM_YENILE);
+        break;
+    }
 }
 
 /*
@@ -259,8 +311,8 @@ void VtThread::dosyaKaydet()
         db.close();
     }
 
-    tumKayitlariGetir();
-    emit islemBitti(_ISLEM_KAYDET);
+    tumKayitlariGetir(_ISLEM_KAYDET);
+    //emit islemBitti(_ISLEM_KAYDET);
 }
 
 /*
