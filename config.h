@@ -51,6 +51,7 @@ public:
     QString CNF_KLASOR_AGACI_ROOT;
     QString CNF_KLASOR_ARCHIVE;
     QString CNF_FILE_NAME_FORMAT;
+    QString CNF_SHOW_FILE_TREE;
 
     bool dosyaVar;
     QString ayarDosyasiYolu;

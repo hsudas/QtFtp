@@ -5,8 +5,8 @@ Config::Config()
     ayarlariOku();
 }
 
-/*
- * uygulama basladiginda ayar dosyasini okur ve ayarlari alir
+/**
+ * @brief Config::ayarlariOku : uygulama basladiginda ayar dosyasini okur ve ayarlari alir
  */
 void Config::ayarlariOku()
 {
@@ -32,6 +32,10 @@ void Config::ayarlariOku()
     }
 }
 
+/**
+ * @brief Config::ayarla : config dosyasından alinan satirdaki deger değişkene ataniyor
+ * @param sl : config dosyasinin satiri
+ */
 void Config::ayarla(QStringList sl)
 {
     if(sl.at(0) == "VT_USERNAME")
@@ -61,5 +65,9 @@ void Config::ayarla(QStringList sl)
     else if(sl.at(0) == "FILE_NAME_FORMAT")
     {
         CNF_FILE_NAME_FORMAT = sl.at(1);
+    }
+    else if(sl.at(0) == "SHOW_FILE_TREE")
+    {
+        CNF_SHOW_FILE_TREE = sl.at(1);
     }
 }

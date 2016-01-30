@@ -39,6 +39,11 @@ QtFtp::QtFtp(QWidget *parent) :
         }
         while(kullaniciAdi.isEmpty());//kullanici adi girilene kadar sorsun
 
+        if(Global::config->CNF_SHOW_FILE_TREE == "0")
+        {
+            ui->treeView->hide();
+        }
+
         ui->btnTarih->setText(QDate::currentDate().toString(TARIH_FORMAT));
         ui->btnTarih2->setText(QDate::currentDate().toString(TARIH_FORMAT));
         connect(ui->btnTarih, SIGNAL(clicked(bool)), this, SLOT(btnTarihTiklandi(bool)));
@@ -50,15 +55,10 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->btnVendorName, SIGNAL(clicked(bool)), this, SLOT(btnVendorNameTiklandi(bool)));
         connect(ui->btnDocumentType, SIGNAL(clicked(bool)), this, SLOT(btnDocumentTypeTiklandi(bool)));
         connect(ui->btnDosyaAc, SIGNAL(clicked(bool)), this, SLOT(btnDosyaAcTiklandi(bool)));
-        //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
         connect(ui->tableWidget,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableWidgetTiklandi(QModelIndex)));
 
-        //vtIslemiBitti = false;
-        //ftpIslemiBitti = false;
-
-        //ftpThreadCalistir();
         vtThreadCalistir();
         klasorAgaciOlustur();
 
@@ -147,6 +147,11 @@ bool QtFtp::ayarlariKontrolEt()
     else if(Global::config->CNF_FILE_NAME_FORMAT.isEmpty())
     {
         QMessageBox::warning(0, "error", "no FILE_NAME_FORMAT option in config file");
+        return false;
+    }
+    else if(Global::config->CNF_SHOW_FILE_TREE.isEmpty())
+    {
+        QMessageBox::warning(0, "error", "no SHOW_FILE_TREE option in config file");
         return false;
     }
 
