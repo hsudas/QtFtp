@@ -53,8 +53,6 @@ QtFtp::QtFtp(QWidget *parent) :
         //connect(ui->listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(listedenElemanSecildi(QListWidgetItem*)));
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
-        connect(ui->actionAdd_Vendor_Name, SIGNAL(triggered(bool)), this, SLOT(vendorNameEkle(bool)));
-        connect(ui->actionAdd_Document_Type, SIGNAL(triggered(bool)), this, SLOT(documentTypeEkle(bool)));
         connect(ui->tableWidget,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableWidgetTiklandi(QModelIndex)));
 
         //vtIslemiBitti = false;
@@ -175,46 +173,6 @@ void QtFtp::tableWidgetTiklandi(QModelIndex mi)
     }
 }
 
-/**
- * @brief QtFtp::documentTypeEkle
- * file->add document type secenegi QtFtp::documentTypeEkle() slotunu cagiriyor.
- * bu slot ekrana input dialog cikariyor burada girilen veriyi kaydetmek
- * icin vt threadini baslatiyor
- */
-void QtFtp::documentTypeEkle(bool b)
-{
-    QInputDialog inputDialog;
-    inputDialog.setOptions(QInputDialog::NoButtons);
-    bool ok;
-
-    QString documentType = inputDialog.getText(this ,"","Document Type", QLineEdit::Normal,"", &ok);
-    if(ok)//iptale tiklanirsa uygulamadan ciksin
-    {
-        vtThread->setISLEM(documentType, _ISLEM_EKLE_DOCUMENT_TYPE);
-        vtThread->start();
-    }
-}
-
-/**
- * @brief QtFtp::vendorNameEkle
- * file->add vendor name secenegi QtFtp::vendorNameEkle() slotunu cagiriyor.
- * bu slot ekrana input dialog cikariyor burada girilen veriyi kaydetmek
- * icin vt threadini baslatiyor
- */
-void QtFtp::vendorNameEkle(bool b)
-{
-    QInputDialog inputDialog;
-    inputDialog.setOptions(QInputDialog::NoButtons);
-    bool ok;
-
-    QString vendorName = inputDialog.getText(this ,"","Vendor Name", QLineEdit::Normal,"", &ok);
-    if(ok)//iptale tiklanirsa uygulamadan ciksin
-    {
-        vtThread->setISLEM(vendorName, _ISLEM_EKLE_VENDOR_NAME);
-        vtThread->start();
-    }
-}
-
 /*
  * paylasilan klasorun icindeki dosyalari treeview a ekliyor
  */
@@ -261,8 +219,6 @@ void QtFtp::tusEtkisiz(bool b)
     ui->btnYenile->setDisabled(b);
     ui->btnKaydet->setDisabled(b);
     ui->btnTemizle->setDisabled(b);
-    ui->actionAdd_Document_Type->setDisabled(b);
-    ui->actionAdd_Vendor_Name->setDisabled(b);
 }
 
 /**

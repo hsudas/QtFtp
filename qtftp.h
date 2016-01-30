@@ -55,8 +55,6 @@ signals:
 
 public slots:
     void tableWidgetTiklandi(QModelIndex);
-    void vendorNameEkle(bool);
-    void documentTypeEkle(bool);
     void vendorNameAlindi(QStringList);
     void documentTypeAlindi(QStringList);
     void btnTarihTiklandi(bool);
