@@ -7,12 +7,12 @@ Takvim::Takvim(QDate date, QPushButton *cagiranBtn)
     connect(this,SIGNAL(activated(QDate)),this, SLOT(secimYapildi(QDate)));
 }
 
-/*
- * takvimde tarihe cift tiklanildigi ve enter a basildigi
+/**
+ * @brief Takvim::secimYapildi : takvimde tarihe cift tiklanildigi ve enter a basildigi
  * zaman secimYapildi(QDate) slotu çalışıyor. secimYapildi(QDate)
  * takvim widget ini kapatiyor
  */
-void Takvim::secimYapildi(QDate date)
+void Takvim::secimYapildi(QDate)
 {
     close();
 }

@@ -3,7 +3,6 @@
 VtThread::VtThread()
 {
     qRegisterMetaType<SqlSorgu>("SqlSorgu");
-    //ISLEM = _ISLEM_TUM_KAYITLAR;
 
 #ifdef Q_OS_LINUX
     db = QSqlDatabase::addDatabase("QODBC3");
@@ -21,8 +20,8 @@ VtThread::VtThread()
 #endif
 }
 
-/*
- * threadin baslama noktasi ISLEM e gore vt islemi yapar
+/**
+ * @brief VtThread::run : threadin baslama noktasi ISLEM e gore vt islemi yapar
  */
 void VtThread::run()
 {
@@ -336,21 +335,6 @@ void VtThread::tumKayitlariGetir(int islem)
         }
 
         db.close();
-
-        /*
-        QSqlQuery query;
-        query.exec("SELECT TUR FROM ROYAL.ROYAL.FATURA;");
-
-        listeFaturaTuru.clear();
-        while (query.next())
-        {
-            QString name = query.value(0).toString();
-            listeFaturaTuru.append(name);
-        }
-
-        db.close();
-
-        emit faturaTuruListesiOlustu(listeFaturaTuru);*/
     }
 
     switch (islem)
@@ -394,9 +378,6 @@ void VtThread::dosyaKaydet()
                     .arg(sqlsrg.invoiceDate)
                     .arg(sqlsrg.saveDate)
                     .arg(sqlsrg.userName));
-        /*
-        bool b = query.exec(QString("INSERT INTO YENI_FATURA (ISIM, TUR, TARIH) VALUES('%1','%2','%3');").arg(isim).arg(faturaTuru).arg(tarih));
-        */
         if(!b)
         {
             qDebug() << "vt hatasi 1"<<db.lastError();
@@ -406,7 +387,6 @@ void VtThread::dosyaKaydet()
     }
 
     tumKayitlariGetir(_ISLEM_KAYDET);
-    //emit islemBitti(_ISLEM_KAYDET);
 }
 
 /*

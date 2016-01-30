@@ -30,7 +30,6 @@ class VtThread : public QThread
     Q_OBJECT
 
 private:
-    //QStringList listeFaturaTuru;
     QSqlDatabase db;
     SqlSorgu sqlsrg;
     QString kaydedilecekVeri;
@@ -54,7 +53,6 @@ public:
     void kayitSil();
 
 signals:
-    //void faturaTuruListesiOlustu(QStringList);
     void islemBitti(int);
     void vtKayitAlindi(SqlSorgu);
     void vendorNameAlindi(QStringList);

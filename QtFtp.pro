@@ -16,7 +16,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         qtftp.cpp \
-    ftpthread.cpp \
     takvim.cpp \
     vtthread.cpp \
     config.cpp \
@@ -25,7 +24,6 @@ SOURCES += main.cpp\
     ayrinti2.cpp
 
 HEADERS  += qtftp.h \
-    ftpthread.h \
     takvim.h \
     vtthread.h \
     config.h \

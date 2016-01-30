@@ -17,7 +17,7 @@ private:
     QPushButton *cagiranBtn;
 
 public slots:
-    void secimYapildi(QDate date);
+    void secimYapildi(QDate);
 
 signals:
     void takvimKapandi(QDate date, QPushButton *btn);
