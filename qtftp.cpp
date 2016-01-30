@@ -5,7 +5,7 @@ QtFtp::QtFtp(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QtFtp)
 {
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+    //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 
     ui->setupUi(this);
 
@@ -66,7 +66,7 @@ QtFtp::QtFtp(QWidget *parent) :
 
         ui->tableWidget->setColumnCount(SUTUN_TOPLAM);
         ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<""<<"id"<<"Document Type"<<"Vendor Name"<<"Invoice Number"<<"Total Amount"<<"File Path"<<"Save Date"<<"Invoice Date"<<"User Name");
-        ui->tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+        ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         ui->tableWidget->hideColumn(1);
         ui->tableWidget->setColumnWidth(0,30);
