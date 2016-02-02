@@ -379,7 +379,7 @@ void QtFtp::vtThreadCalistir()
 
     connect(vtThread, SIGNAL(vendorNameAlindi(QStringList)),this, SLOT(vendorNameAlindi(QStringList)));
     connect(vtThread, SIGNAL(documentTypeAlindi(QStringList)),this, SLOT(documentTypeAlindi(QStringList)));
-    connect(vtThread, SIGNAL(islemBitti(int)), this, SLOT(islemBitti_vt(int)));
+    connect(vtThread, SIGNAL(islemBitti(int, float)), this, SLOT(islemBitti_vt(int, float)));
     connect(vtThread, SIGNAL(vtKayitAlindi(SqlSorgu)), this, SLOT(vtKayitAlindi(SqlSorgu)));
 
     tusEtkisiz(true);
@@ -471,12 +471,22 @@ void QtFtp::btnAyrintiTiklandi(int satir)
 }
 
 /**
+ * @brief QtFtp::toplamlariAl : toplam tutar ve kayıt sayısını ui ye yazdırır
+ * @param toplamTutar : gridde lisstelen kayıtların toplam tutari
+ */
+void QtFtp::toplamlariAl(float toplamTutar)
+{
+    ui->txtToplamTutar->setText(QString::number(toplamTutar));
+    ui->txtToplamKayit->setText(QString::number(ui->tableWidget->rowCount()));
+}
+
+/**
  * @brief QtFtp::islemBitti_vt : vt threadi işini bitirdiği zaman islemBitti() sinyalini veriyor.
  * islemBitti() sinyali islemBitti_vt() slotunu çağırıyor. islem turune gore ekrana
  * messageBox cikariyor
  * @param islemTuru : biten islemin turu
  */
-void QtFtp::islemBitti_vt(int islemTuru)
+void QtFtp::islemBitti_vt(int islemTuru, float toplamTutar)
 {
     tusEtkisiz(false);
 
@@ -485,10 +495,13 @@ void QtFtp::islemBitti_vt(int islemTuru)
     case _ISLEM_KAYDET:
         QMessageBox::information(this,"info","saved");
         alanlariTemizle();
+        toplamlariAl(toplamTutar);
         break;
     case _ISLEM_ARAMA:
+        toplamlariAl(toplamTutar);
         break;
     case _ISLEM_YENILE:
+        toplamlariAl(toplamTutar);
         break;
     case _ISLEM_EKLE_VENDOR_NAME:
         QMessageBox::information(this,"info","vendor name added");
@@ -502,6 +515,7 @@ void QtFtp::islemBitti_vt(int islemTuru)
         break;
     case _ISLEM_BASLANGIC:
         connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(btnAyrintiTiklandi(int)));
+        toplamlariAl(toplamTutar);
         break;
     case _ISLEM_VENDOR_NAME:
         QMessageBox::information(this,"info","vendor names saved");

@@ -53,7 +53,7 @@ public:
     void kayitSil();
 
 signals:
-    void islemBitti(int);
+    void islemBitti(int, float);
     void vtKayitAlindi(SqlSorgu);
     void vendorNameAlindi(QStringList);
     void documentTypeAlindi(QStringList);

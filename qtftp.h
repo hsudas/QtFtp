@@ -60,9 +60,10 @@ public slots:
     void takvimKapandi(QDate date, QPushButton *btn);
     void btnKaydetTiklandi(bool);
     void vtKayitAlindi(SqlSorgu srg);
-    void islemBitti_vt(int);
+    void islemBitti_vt(int, float);
     void klasorAgacinaCiftTiklandi(QModelIndex m);
     void klasorAgacinaTiklandi(QModelIndex m);
+    void toplamlariAl(float toplamTutar);
 };
 
 #endif // QTFTP_H

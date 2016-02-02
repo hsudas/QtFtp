@@ -86,7 +86,7 @@ void VtThread::kayitSil()
         query.exec(QString("DELETE FROM FATURA2 WHERE ID=%1;").arg(kaydedilecekVeri));
 
          db.close();
-         emit islemBitti(_ISLEM_SIL);
+         emit islemBitti(_ISLEM_SIL, 0);
     }
 }
 
@@ -119,7 +119,7 @@ void VtThread::documentTypeKaydet()
         db.close();
 
         emit documentTypeAlindi(kaydedilecekVeriler);
-        emit islemBitti(_ISLEM_DOCUMENT_TYPE);
+        emit islemBitti(_ISLEM_DOCUMENT_TYPE, 0);
     }
 }
 
@@ -152,7 +152,7 @@ void VtThread::vendorNameKaydet()
         db.close();
 
         emit vendorNameAlindi(kaydedilecekVeriler);
-        emit islemBitti(_ISLEM_VENDOR_NAME);
+        emit islemBitti(_ISLEM_VENDOR_NAME, 0);
     }
 }
 
@@ -186,7 +186,7 @@ void VtThread::kayitGuncelle()
         db.close();
     }
 
-    emit islemBitti(_ISLEM_GUNCELLE);
+    emit islemBitti(_ISLEM_GUNCELLE, 0);
 }
 
 /**
@@ -214,7 +214,7 @@ void VtThread::documentTypeEkle()
         db.close();
 
         documentTypeGetir();
-        emit islemBitti(_ISLEM_EKLE_DOCUMENT_TYPE);
+        emit islemBitti(_ISLEM_EKLE_DOCUMENT_TYPE, 0);
     }
 }
 
@@ -243,7 +243,7 @@ void VtThread::vendorNameEkle()
         db.close();
 
         vendorNameGetir();
-        emit islemBitti(_ISLEM_EKLE_VENDOR_NAME);
+        emit islemBitti(_ISLEM_EKLE_VENDOR_NAME, 0);
     }
 }
 
@@ -309,6 +309,7 @@ void VtThread::vendorNameGetir()
  */
 void VtThread::tumKayitlariGetir(int islem)
 {
+    float toplamAmount = 0;
     if (!db.open())
     {
         qDebug() << "vt hatasi"<<db.lastError();
@@ -326,6 +327,7 @@ void VtThread::tumKayitlariGetir(int islem)
             srg.vendorName = query.value(2).toString();
             srg.invoiceNumber = query.value(3).toString();
             srg.amount = query.value(4).toString();
+            toplamAmount = toplamAmount + query.value(4).toFloat();
             srg.filePath = query.value(5).toString();
             srg.saveDate = query.value(6).toString();
             srg.invoiceDate = query.value(7).toString();
@@ -340,16 +342,16 @@ void VtThread::tumKayitlariGetir(int islem)
     switch (islem)
     {
     case _ISLEM_BASLANGIC:
-        emit islemBitti(_ISLEM_BASLANGIC);
+        emit islemBitti(_ISLEM_BASLANGIC, toplamAmount);
         break;
     case _ISLEM_TUM_KAYITLAR:
-        emit islemBitti(_ISLEM_YENILE);
+        emit islemBitti(_ISLEM_YENILE, toplamAmount);
         break;
     case _ISLEM_KAYDET:
-        emit islemBitti(_ISLEM_KAYDET);
+        emit islemBitti(_ISLEM_KAYDET, toplamAmount);
         break;
     default:
-        emit islemBitti(_ISLEM_YENILE);
+        emit islemBitti(_ISLEM_YENILE, toplamAmount);
         break;
     }
 }
@@ -394,6 +396,7 @@ void VtThread::dosyaKaydet()
  */
 void VtThread::aramaSonuclariniGetir()
 {
+    float toplamAmount = 0;
     if (!db.open())
     {
         qDebug() << "vt hatasi"<<db.lastError();
@@ -437,6 +440,7 @@ void VtThread::aramaSonuclariniGetir()
             sqlsrg.vendorName=query.value(1).toString();
             sqlsrg.invoiceNumber=query.value(2).toString();
             sqlsrg.amount=query.value(3).toString();
+            toplamAmount = toplamAmount + query.value(3).toFloat();
             sqlsrg.filePath=query.value(4).toString();
             sqlsrg.saveDate=query.value(5).toString();
             sqlsrg.invoiceDate=query.value(6).toString();
@@ -448,7 +452,7 @@ void VtThread::aramaSonuclariniGetir()
         db.close();
     }
 
-    emit islemBitti(_ISLEM_ARAMA);
+    emit islemBitti(_ISLEM_ARAMA, toplamAmount);
 }
 
 VtThread::~VtThread()
