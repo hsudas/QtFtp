@@ -86,7 +86,7 @@ bool QtFtp::eventFilter(QObject *obj, QEvent *event)
     if (obj == ui->txtTotalAmount && event->type() == QEvent::KeyPress)
     {
         QKeyEvent *key = static_cast<QKeyEvent *>(event);
-        if((key->key() >= 48 && key->key() <= 57) || (key->key() == Qt::Key_Backspace))
+        if((key->key() >= 48 && key->key() <= 57) || (key->key() == Qt::Key_Backspace) || (key->key() == Qt::Key_Delete))
         {
             yazilacak = true;
         }
