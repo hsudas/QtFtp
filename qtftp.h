@@ -9,6 +9,7 @@
 #include <QDesktopServices>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 #include "vtthread.h"
 #include "takvim.h"
@@ -35,17 +36,24 @@ public:
     void alanlariTemizle();
     void vtYenile();
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+
 private:
     Ui::QtFtp *ui;
     VtThread *vtThread;
     QFileSystemModel *dirModel;
     QString kullaniciAdi;
     QSignalMapper *signalMapper;
+    bool yazilacak;
+    QString sonAmountText;
 
 signals:
     void clicked(const int &text);
 
 public slots:
+    void btnArtiEksiTiklandi(bool);
+    void yaziDegisti(QString);
     void tableWidgetTiklandi(QModelIndex);
     void vendorNameAlindi(QStringList);
     void documentTypeAlindi(QStringList);

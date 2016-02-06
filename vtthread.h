@@ -51,6 +51,7 @@ public:
     void vendorNameKaydet();
     void documentTypeKaydet();
     void kayitSil();
+    float stringToFloat(QString);
 
 signals:
     void islemBitti(int, float);

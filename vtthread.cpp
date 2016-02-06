@@ -304,6 +304,23 @@ void VtThread::vendorNameGetir()
 }
 
 /**
+ * @brief VtThread::stringToFloat : gelen yazini virgullerini silip floata cevirir
+ * @param text : virgullu yazi
+ */
+float VtThread::stringToFloat(QString text)
+{
+    QString solText = text.left(text.lastIndexOf("."));
+    QString sagText = text.mid(text.lastIndexOf(".") + 1);
+
+    solText.replace(",","");
+    QString yeni = solText;
+    yeni.append(".");
+    yeni.append(sagText);
+
+    return yeni.toFloat();
+}
+
+/**
  * @brief VtThread::tumKayitlariGetir : vt deki tum kayitlari getirir
  * @param islem : islem turune göre kullaniciya mesaj verilecek
  */
@@ -327,11 +344,13 @@ void VtThread::tumKayitlariGetir(int islem)
             srg.vendorName = query.value(2).toString();
             srg.invoiceNumber = query.value(3).toString();
             srg.amount = query.value(4).toString();
-            toplamAmount = toplamAmount + query.value(4).toFloat();
+            //toplamAmount = toplamAmount + query.value(4).toFloat();
             srg.filePath = query.value(5).toString();
             srg.saveDate = query.value(6).toString();
             srg.invoiceDate = query.value(7).toString();
             srg.userName = query.value(8).toString();
+
+            toplamAmount = toplamAmount + stringToFloat(srg.amount);
 
             emit vtKayitAlindi(srg);
         }
@@ -408,10 +427,12 @@ void VtThread::aramaSonuclariniGetir()
         {
             sorgu.append(QString(" AND DOCUMENT_TYPE='%1'").arg(sqlsrg.documentType));
         }
+        /*
         if(!sqlsrg.amount.isEmpty())
         {
             sorgu.append(QString(" AND TOTAL_AMOUNT='%1'").arg(sqlsrg.amount));
         }
+        */
         if(!sqlsrg.filePath.isEmpty())
         {
             sorgu.append(QString(" AND FILE_PATH='%1'").arg(sqlsrg.filePath));
@@ -440,11 +461,13 @@ void VtThread::aramaSonuclariniGetir()
             sqlsrg.vendorName=query.value(1).toString();
             sqlsrg.invoiceNumber=query.value(2).toString();
             sqlsrg.amount=query.value(3).toString();
-            toplamAmount = toplamAmount + query.value(3).toFloat();
+            //toplamAmount = toplamAmount + query.value(3).toFloat();
             sqlsrg.filePath=query.value(4).toString();
             sqlsrg.saveDate=query.value(5).toString();
             sqlsrg.invoiceDate=query.value(6).toString();
             sqlsrg.userName=query.value(7).toString();
+
+            toplamAmount = toplamAmount + stringToFloat(sqlsrg.amount);
 
             emit vtKayitAlindi(sqlsrg);
         }

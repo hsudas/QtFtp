@@ -58,6 +58,8 @@ QtFtp::QtFtp(QWidget *parent) :
         connect(ui->treeView, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(klasorAgacinaCiftTiklandi(QModelIndex)));
         connect(ui->treeView, SIGNAL(clicked(QModelIndex)),this, SLOT(klasorAgacinaTiklandi(QModelIndex)));
         connect(ui->tableWidget,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableWidgetTiklandi(QModelIndex)));
+        connect(ui->txtTotalAmount,SIGNAL(textEdited(QString)), this, SLOT(yaziDegisti(QString)));
+        connect(ui->btnArtiEksi, SIGNAL(clicked(bool)), this, SLOT(btnArtiEksiTiklandi(bool)));
 
         vtThreadCalistir();
         klasorAgaciOlustur();
@@ -68,6 +70,106 @@ QtFtp::QtFtp(QWidget *parent) :
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         ui->tableWidget->hideColumn(1);
         ui->tableWidget->setColumnWidth(0,30);
+    }
+
+    qApp->installEventFilter(this);
+
+    yazilacak = false;
+    sonAmountText = ui->txtTotalAmount->text();
+}
+
+/**
+ * @brief QtFtp::eventFilter : amount alanında sadece sayılar ve geri tusu calismasi icin heng tusa basildigini kontrol ediyor
+ */
+bool QtFtp::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->txtTotalAmount && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *key = static_cast<QKeyEvent *>(event);
+        if((key->key() >= 48 && key->key() <= 57) || (key->key() == Qt::Key_Backspace))
+        {
+            yazilacak = true;
+        }
+        else
+        {
+            yazilacak = false;
+        }
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+/**
+ * @brief QtFtp::btnArtiEksiTiklandi : tutarin pozitif negatif oldugunu anlamak için
+ * tıklandıgı zaman butonun uzerindeki isareti degistiriyor
+ */
+void QtFtp::btnArtiEksiTiklandi(bool)
+{
+    if(ui->btnArtiEksi->text() == "+")
+    {
+        ui->btnArtiEksi->setText("-");
+    }
+    else
+    {
+        ui->btnArtiEksi->setText("+");
+    }
+}
+
+/**
+ * @brief QtFtp::yaziDegisti : txtAmount degisince burası calisir
+ * txtAmount yazilan sayıya virgul ekler
+ * @param yeniYazi
+ */
+void QtFtp::yaziDegisti(QString yeniYazi)
+{
+    int cursorPos = ui->txtTotalAmount->cursorPosition();
+
+    if(yazilacak)
+    {
+        //qDebug()<<"number 0 : "<<yeniYazi<<" -- txt : "<<ui->txtTotalAmount->text();
+
+        QString solText = ui->txtTotalAmount->text().left(ui->txtTotalAmount->text().lastIndexOf("."));
+        QString sagText = ui->txtTotalAmount->text().mid(ui->txtTotalAmount->text().lastIndexOf(".")+1);
+
+        //qDebug()<<"number 1 : "<<solText<<" -- "<<sagText;
+
+        int once = solText.size();
+        //qDebug()<<"once : "<<once;
+
+
+        solText.replace(QString(","), QString(""));
+        //qDebug()<<"number 2 : "<<solText;
+
+        double solDouble = solText.toDouble();
+
+        //qDebug()<<"number 3 : "<<solDouble;
+        QString solTextAyrilmis = QLocale(QLocale::English).toString(solDouble, 'f', 0);
+        //qDebug()<<"number 4 : "<<solTextAyrilmis;
+
+        ui->txtTotalAmount->setText(solTextAyrilmis+"."+sagText);
+
+        sonAmountText= ui->txtTotalAmount->text();
+
+        int sonra = solTextAyrilmis.size();
+        //qDebug()<<"sonra : "<<sonra;
+
+        if(yeniYazi.size() > 5 && sonra > once)
+        {
+            ui->txtTotalAmount->setCursorPosition(cursorPos+1);
+        }
+        else if(sonra < once)
+        {
+            ui->txtTotalAmount->setCursorPosition(cursorPos-1);
+        }
+        else
+        {
+            ui->txtTotalAmount->setCursorPosition(cursorPos);
+        }
+    }
+    else
+    {
+        ui->txtTotalAmount->setText(sonAmountText);
+        ui->txtTotalAmount->setCursorPosition(cursorPos-1);
     }
 }
 
@@ -321,7 +423,17 @@ void QtFtp::btnKaydetTiklandi(bool)
             SqlSorgu sqlsorgu;
             sqlsorgu.vendorName = ui->cbVendorName->currentText();
             sqlsorgu.documentType = ui->cbDocumentType->currentText();
-            sqlsorgu.amount = ui->txtTotalAmount->text();
+
+            if(ui->btnArtiEksi->text() == "+")
+            {
+                sqlsorgu.amount = ui->txtTotalAmount->text();
+            }
+            else
+            {
+                sqlsorgu.amount = ui->btnArtiEksi->text() + ui->txtTotalAmount->text();
+            }
+
+            //sqlsorgu.amount = ui->txtTotalAmount->text();
             sqlsorgu.invoiceNumber = ui->txtInvoiceNumber->text();
             QDate date = QDate::fromString(ui->btnTarih->text(),"yyyy-MM-dd");
             sqlsorgu.invoiceDate = date.toString("MM/dd/yyyy");
@@ -476,7 +588,8 @@ void QtFtp::btnAyrintiTiklandi(int satir)
  */
 void QtFtp::toplamlariAl(float toplamTutar)
 {
-    ui->txtToplamTutar->setText(QString::number(toplamTutar));
+    QString tutar = QLocale(QLocale::English).toString(toplamTutar, 'f', 2);
+    ui->txtToplamTutar->setText(tutar);
     ui->txtToplamKayit->setText(QString::number(ui->tableWidget->rowCount()));
 }
 
